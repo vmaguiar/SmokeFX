@@ -2,18 +2,32 @@
 
 #include "configConsts.hpp"
 #include "events.hpp"
+#include "particle.hpp"
+#include  "emitter.hpp"
 
 int main() {
-    sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(config::windowSize), "SmokeFX Workss!");
-    window.setFramerateLimit(config::maxFramerate);
+    sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(config::WINDOW_SIZE), "SmokeFX Workss!");
+    window.setFramerateLimit(config::MAX_FRAMERATE);
+
+    Emitter emitter(config::EMITTER_START_POSITION);
+    std::vector<Particle> smokeParticles;
+
+    // sf::Clock clock;
 
     while (window.isOpen()) {
-        processEvents(window);
+        processEvents(window, emitter);
+
+        if (emitter.m_isCasting) {
+            sf::Vector2f particleSpeed = {100.0f, 0.0f};
+            smokeParticles.emplace_back(emitter.getPosition(), particleSpeed);
+        }
 
         window.clear();
         // Render...
-        sf::CircleShape circle(30);
-        window.draw(circle);
+        for (Particle &p: smokeParticles) {
+            p.draw(window);
+        }
+        emitter.draw(window);
         window.display();
     }
 }
