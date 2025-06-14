@@ -8,7 +8,10 @@ namespace config {
     constexpr uint8_t MAX_FRAMERATE = 60;
     constexpr float CONFIG_DELTA_TIME = 1.0f / static_cast<float>(MAX_FRAMERATE);
 
-    // Emitter Config
-    constexpr float EMITTER_RADIUS = 20.0f;
+    // World Config
+    constexpr float EMITTER_RADIUS = 10.0f;
     constexpr sf::Vector2f EMITTER_START_POSITION = sf::Vector2f(50.0f, WINDOW_SIZE_F.y * 0.5f);
+    constexpr float PARTICLE_INIT_SPEED = 300.0f;
+    constexpr float PARTICLE_SPAWN_RATE = 20.0f; // particle for seconds
+    constexpr float PARTICLE_SPAWN_TIME = 1.0f / PARTICLE_SPAWN_RATE; // 0.05...
 }

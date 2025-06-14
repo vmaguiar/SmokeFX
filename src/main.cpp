@@ -14,17 +14,24 @@ int main() {
     std::vector<Particle> smokeParticles;
 
     sf::Clock clock;
+    float spawnTimer = 0.0f;
 
     while (window.isOpen()) {
-        processEvents(window, emitter);
-
         const float deltaTime = clock.restart().asSeconds();
 
+        processEvents(window, emitter);
+
         if (emitter.m_isCasting) {
-            sf::Vector2f particleSpeed = {100.0f, 0.0f};
-            smokeParticles.emplace_back(emitter.getPosition(), particleSpeed);
-            std::cout << "num de particulas = " << smokeParticles.size() << std::endl;
+            spawnTimer = spawnTimer + deltaTime;
+            if (spawnTimer > config::PARTICLE_SPAWN_TIME) {
+                std::cout << spawnTimer << std::endl;
+                sf::Vector2f particleSpeed = {config::PARTICLE_INIT_SPEED, 0.0f};
+                smokeParticles.emplace_back(emitter.getPosition(), particleSpeed);
+                std::cout << "num de particulas = " << smokeParticles.size() << std::endl;
+                spawnTimer = spawnTimer - config::PARTICLE_SPAWN_TIME;
+            }
         }
+
         for (int i = 0; i < smokeParticles.size();) {
             smokeParticles[i].updateParticle(deltaTime);
             if (smokeParticles[i].getPosition().x > config::WINDOW_SIZE.x) {

@@ -8,7 +8,7 @@ class Particle {
     // sf::Vector2f m_position;
     sf::Vector2f m_velocity;
     // Particle configs
-    sf::Vector2f m_particleShapeSize = {10.0f, 10.0f};
+    sf::Vector2f m_particleShapeSize = {30.0f, 30.0f};
     sf::Color m_particleShapeColor = sf::Color::White;
 
 public:
