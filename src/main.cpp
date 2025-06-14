@@ -21,16 +21,22 @@ int main() {
 
         processEvents(window, emitter);
 
-        if (emitter.m_isCasting) {
-            spawnTimer = spawnTimer + deltaTime;
-            if (spawnTimer > config::PARTICLE_SPAWN_TIME) {
-                std::cout << spawnTimer << std::endl;
-                sf::Vector2f particleSpeed = {config::PARTICLE_INIT_SPEED, 0.0f};
-                smokeParticles.emplace_back(emitter.getPosition(), particleSpeed);
-                std::cout << "num de particulas = " << smokeParticles.size() << std::endl;
-                spawnTimer = spawnTimer - config::PARTICLE_SPAWN_TIME;
-            }
-        }
+        sf::Vector2f mousePosition = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
+
+        emitter.updateEmitter(mousePosition);
+
+        emitter.spawnNewParticlesHandler(smokeParticles, deltaTime);
+
+        // if (emitter.m_isCasting) {
+        //     spawnTimer = spawnTimer + deltaTime;
+        //     if (spawnTimer > config::PARTICLE_SPAWN_TIME) {
+        //         std::cout << spawnTimer << std::endl;
+        //         sf::Vector2f particleSpeed = {config::PARTICLE_INIT_SPEED, 0.0f};
+        //         smokeParticles.emplace_back(emitter.getPosition(), particleSpeed);
+        //         std::cout << "num de particulas = " << smokeParticles.size() << std::endl;
+        //         spawnTimer = spawnTimer - config::PARTICLE_SPAWN_TIME;
+        //     }
+        // }
 
         for (int i = 0; i < smokeParticles.size();) {
             smokeParticles[i].updateParticle(deltaTime);
