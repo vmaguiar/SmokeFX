@@ -37,7 +37,7 @@ void Emitter::updateEmitter(sf::Vector2f mousePosition) {
     }
     m_currentLaunchDirection = m_currentLaunchDirection / lengthToMouse; // Normalizado
     sf::Vector2f perpendicularDirection = {-m_currentLaunchDirection.y, m_currentLaunchDirection.x};
-    float pointerTipLength = 20.0f;
+    float pointerTipLength = 11.5f;
 
     m_activeEmitterPointerShape.clear();
     m_activeEmitterPointerOutline.clear();
@@ -71,14 +71,15 @@ void Emitter::updateEmitter(sf::Vector2f mousePosition) {
     // float outlineHalfWidth = config::EMITTER_RADIUS + (outlineThickness * 0.5f);
     float outlineTipLength = pointerTipLength + outlineThickness;
 
-    sf::Vector2f pointerOutlineConnection = m_EmitterPosition + m_currentLaunchDirection * config::EMITTER_RADIUS;;
+    sf::Vector2f pointerOutlineConnection = m_EmitterPosition + m_currentLaunchDirection * config::EMITTER_RADIUS;
 
-    sf::Vector2f baseOutlinePoint1 = pointerOutlineConnection + (
-                                         perpendicularDirection * (config::EMITTER_RADIUS + outlineThickness * 0.5f));
-    sf::Vector2f baseOutilinePoint2 = pointerOutlineConnection - (
-                                          perpendicularDirection * (config::EMITTER_RADIUS + outlineThickness * 0.5f));
+    sf::Vector2f baseOutlinePoint1 = m_EmitterPosition + (
+                                         perpendicularDirection * (config::EMITTER_RADIUS + outlineThickness * 1.20f));
+    sf::Vector2f baseOutilinePoint2 = m_EmitterPosition - (
+                                          perpendicularDirection * (config::EMITTER_RADIUS + outlineThickness * 1.20f));
 
-    sf::Vector2f outlineTipPoint = m_EmitterPosition + m_currentLaunchDirection * (config::EMITTER_RADIUS + outlineTipLength);
+    sf::Vector2f outlineTipPoint = m_EmitterPosition + m_currentLaunchDirection * (
+                                       config::EMITTER_RADIUS + outlineTipLength * 1.35f);
 
     // 1
     m_activeEmitterPointerOutline.append({baseOutlinePoint1, emitterOutlineColor});
@@ -89,32 +90,21 @@ void Emitter::updateEmitter(sf::Vector2f mousePosition) {
     m_activeEmitterPointerOutline.append({baseOutilinePoint2, emitterOutlineColor});
     m_activeEmitterPointerOutline.append({outlineTipPoint, emitterOutlineColor});
     m_activeEmitterPointerOutline.append({pointerOutlineConnection, emitterOutlineColor});
-
-    // sf::Vector2f outlineConnectionTop = m_EmitterPosition + perpendicularDirection * (config::EMITTER_RADIUS + outlineThickness);
-    // sf::Vector2f outlineConnectionBottom = m_EmitterPosition - perpendicularDirection * (
-    //                                            config::EMITTER_RADIUS + outlineThickness);
-    //
-    // sf::Vector2f outlineTip = m_EmitterPosition + m_currentLaunchDirection * (config::EMITTER_RADIUS + outlineTipLength);
-    //
-    // m_activeEmitterPointerOutline.append({outlineConnectionTop, emitterOutlineColor});
-    // m_activeEmitterPointerOutline.append({outlineTip, emitterOutlineColor});
-    // m_activeEmitterPointerOutline.append({outlineConnectionBottom, emitterOutlineColor});
-    // m_activeEmitterPointerOutline.append({outlineConnectionTop, emitterOutlineColor});
 }
 
 
 void Emitter::draw(sf::RenderWindow &window) const {
     if (m_isCasting) {
-        window.draw(m_idleEmitterShape);
-        // window.draw(m_activeEmitterBaseShape);
-        // window.draw(m_activeEmitterPointerShape);
-        // window.draw(m_activeEmitterPointerOutline);
-    }
-    else {
         // window.draw(m_idleEmitterShape);
-        window.draw(m_activeEmitterPointerOutline);
         window.draw(m_activeEmitterBaseShape);
         window.draw(m_activeEmitterPointerShape);
+        window.draw(m_activeEmitterPointerOutline);
+    }
+    else {
+        window.draw(m_idleEmitterShape);
+        // window.draw(m_activeEmitterPointerOutline);
+        // window.draw(m_activeEmitterBaseShape);
+        // window.draw(m_activeEmitterPointerShape);
     }
 }
 
