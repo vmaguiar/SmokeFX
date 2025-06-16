@@ -96,9 +96,9 @@ void Emitter::updateEmitter(sf::Vector2f mousePosition) {
 void Emitter::draw(sf::RenderWindow &window) const {
     if (m_isCasting) {
         // window.draw(m_idleEmitterShape);
+        window.draw(m_activeEmitterPointerOutline);
         window.draw(m_activeEmitterBaseShape);
         window.draw(m_activeEmitterPointerShape);
-        window.draw(m_activeEmitterPointerOutline);
     }
     else {
         window.draw(m_idleEmitterShape);
