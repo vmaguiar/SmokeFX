@@ -60,7 +60,7 @@ void MenuState::activateSelectedItem() {
     }
     if (m_selectedItemIndex == 0) {
         // item Constant Speed Simulator
-        // m_game.changeState(std::make_unique<ConstantSpeedState>(m_game));
+        m_game.pushState(std::make_unique<ConstantSpeedState>(m_game));
     }
     else if (m_selectedItemIndex == 1) {
         // item Exit

@@ -20,7 +20,8 @@ add_executable(${PROJECT_NAME}
         src/emitter.cpp
         src/gameState.cpp
         src/game.cpp
-        src/states/menuState.cpp)
+        src/states/menuState.cpp
+        src/states/constantSpeedState.cpp)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${PROJECT_NAME} PRIVATE SFML::Graphics)
 
