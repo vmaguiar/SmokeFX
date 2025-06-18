@@ -6,7 +6,7 @@ class Game;
 
 class GameState {
 public:
-    virtual ~GameState() = default;
+    virtual ~GameState();
 
     virtual void handleEvent(const sf::Event &event);
 
