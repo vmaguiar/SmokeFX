@@ -80,8 +80,9 @@ void MenuState::handleEvent(const sf::Event &event) {
     }
 
     else if (event.is<sf::Event::MouseMoved>()) {
+        const auto *mouseMoved = event.getIf<sf::Event::MouseMoved>();
         for (size_t i = 0; i < m_menuItems.size(); i++) {
-            if (m_menuItems[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(event.mouseMove.position))) {
+            if (m_menuItems[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mouseMoved->position))) {
                 if (m_selectedItemIndex != i) {
                     if (!m_menuItems.empty()) {
                         m_menuItems[m_selectedItemIndex].setFillColor(sf::Color::White);
@@ -111,7 +112,10 @@ void MenuState::update(float dt) {
 }
 
 void MenuState::draw(sf::RenderWindow &window) {
-    window.draw(m_titleText);
+    if (m_titleText.has_value()) {
+        window.draw(*m_titleText);
+    }
+
     for (const auto &item: m_menuItems) {
         window.draw(item);
     }
