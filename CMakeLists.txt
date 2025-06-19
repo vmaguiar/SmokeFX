@@ -18,6 +18,7 @@ add_executable(${PROJECT_NAME}
         src/configConsts.hpp
         src/particle.cpp
         src/emitter.cpp
+        src/smokeMaker.cpp
         src/gameState.cpp
         src/game.cpp
         src/states/menuState.cpp
