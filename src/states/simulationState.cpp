@@ -35,7 +35,6 @@ void SimulationState::handleEvent(const sf::Event &event) {
     if (event.is<sf::Event::MouseMoved>()) {
         const auto *mouseMoved = event.getIf<sf::Event::MouseMoved>();
         m_smokeMaker.setAimTarget(static_cast<sf::Vector2f>(mouseMoved->position));
-        std::cout << "Mouse mexeu: (" << mouseMoved->position.x << ", " << mouseMoved->position.y << ")" << std::endl;
     }
     if (const auto *mousePressed = event.getIf<sf::Event::MouseButtonPressed>()) {
         if (mousePressed->button == sf::Mouse::Button::Left) {

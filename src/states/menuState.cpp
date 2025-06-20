@@ -15,7 +15,7 @@ MenuState::MenuState(Game &game): m_game(game), m_selectedItemIndex(0) {
     m_titleText->setPosition({config::WINDOW_SIZE_F.x / 2.0f, (config::WINDOW_SIZE_F.y / 2.0f) - 150});
 
     // Menu items config
-    m_menuItems.emplace_back(m_font, "Simulation: Constant Speed", 50); // index = 0
+    m_menuItems.emplace_back(m_font, "Simulation: SmokeFX", 50); // index = 0
     m_menuItems.emplace_back(m_font, "Exit", 50); // index = 1
 
     setupText();

@@ -162,6 +162,7 @@ void SmokeMaker::updateActiveSmokeMakerVisuals() {
 void SmokeMaker::update(float dt) {
     if (m_isActive) {
         spawnNewParticles(dt);
+        updateActiveSmokeMakerVisuals();
     }
     updateParticles(dt);
     removeDeadParticles();
@@ -174,8 +175,8 @@ void SmokeMaker::draw(sf::RenderWindow &window) {
 
     if (m_isActive) {
         window.draw(m_ONsmokeMakerShape);
-        window.draw(m_ONsmokeMakerShapePointer);
         window.draw(m_ONsmokeMakerShapePointerOutline);
+        window.draw(m_ONsmokeMakerShapePointer);
     }
     else {
         window.draw(m_OFFsmokeMakerShape);
