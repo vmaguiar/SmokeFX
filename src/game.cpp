@@ -2,7 +2,7 @@
 #include "configConsts.hpp"
 // Incluir os estados posteriormente
 
-Game::Game() {
+Game::Game(sf::Font &font): m_gameFont(font) {
     sf::ContextSettings settings;
     settings.antiAliasingLevel = 8;
     m_window.create(sf::VideoMode(config::WINDOW_SIZE), "SmokeFX", sf::State::Windowed, settings);

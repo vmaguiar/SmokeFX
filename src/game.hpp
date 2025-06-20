@@ -8,9 +8,11 @@ class Game {
     std::stack<std::unique_ptr<GameState> > m_statesStack;
 
 public:
-    Game();
+    Game(sf::Font &font);
 
     ~Game();
+
+    sf::Font m_gameFont;
 
     void run();
 

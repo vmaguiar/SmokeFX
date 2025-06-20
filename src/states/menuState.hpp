@@ -2,7 +2,7 @@
 
 #include "../gameState.hpp"
 #include "../game.hpp"
-#include "constantSpeedState.hpp"
+#include "SimulationState.hpp"
 #include <SFML/Graphics.hpp>
 
 class Game;
