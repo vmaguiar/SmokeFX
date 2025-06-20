@@ -21,7 +21,7 @@ class MenuState : public GameState {
 
     void selectPreviousItem();
 
-    void activateSelectedItem();
+    void activateSelectedItem() const;
 
 public:
     explicit MenuState(Game &game);

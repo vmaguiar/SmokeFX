@@ -5,14 +5,13 @@
 
 class Game {
     sf::RenderWindow m_window;
+    sf::Font m_font;
     std::stack<std::unique_ptr<GameState> > m_statesStack;
 
 public:
-    Game(sf::Font &font);
+    Game(const sf::Font &font);
 
     ~Game();
-
-    sf::Font m_gameFont;
 
     void run();
 
@@ -23,4 +22,6 @@ public:
     void changeState(std::unique_ptr<GameState> state);
 
     sf::RenderWindow &getWindow();
+
+    sf::Font getFont();
 };

@@ -126,8 +126,8 @@ void SmokeMaker::updateActiveSmokeMakerVisuals() {
 
     sf::Vector2f perpendicularDirection = sf::Vector2f(-m_currentLaunchDirection.y, m_currentLaunchDirection.x);
 
-    m_ONsmokeMakerShapePointer.clear();
-    m_ONsmokeMakerShapePointerOutline.clear();
+    // m_ONsmokeMakerShapePointer.clear();
+    // m_ONsmokeMakerShapePointerOutline.clear();
 
     // tip of triangle
     sf::Vector2f p0_pointer = m_position + (m_currentLaunchDirection * pointerLength);

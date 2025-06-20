@@ -1,4 +1,6 @@
 #include "menuState.hpp"
+#include "simulationState.hpp"
+#include "../game.hpp"
 #include <iostream>
 #include "../configConsts.hpp"
 
@@ -54,13 +56,13 @@ void MenuState::selectPreviousItem() {
     }
 }
 
-void MenuState::activateSelectedItem() {
+void MenuState::activateSelectedItem() const {
     if (m_menuItems.empty()) {
         return;
     }
     if (m_selectedItemIndex == 0) {
         // item Constant Speed Simulator
-        m_game.pushState(std::make_unique<SimulationState>(m_game));
+        m_game.pushState(std::make_unique<SimulationState>(m_game, m_game.getWindow()));
     }
     else if (m_selectedItemIndex == 1) {
         // item Exit

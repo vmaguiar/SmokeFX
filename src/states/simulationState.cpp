@@ -14,7 +14,7 @@ SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(g
                                                                             sf::Vector2f({0.0f, -1.0f}),
                                                                             config::PARTICLE_INIT_SPEED,
                                                                             config::PARTICLE_SPAWN_RATE),
-                                                                        m_font(game.m_gameFont),
+                                                                        m_font(m_game.getFont()),
                                                                         m_featureStatusText(m_font, "texto inicial", 18),
                                                                         m_isSmokeMakerActive(false) {
     m_activeFeatures[SimulationFeature::ConstantSpeed] = true;

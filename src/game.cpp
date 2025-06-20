@@ -2,7 +2,7 @@
 #include "configConsts.hpp"
 // Incluir os estados posteriormente
 
-Game::Game(sf::Font &font): m_gameFont(font) {
+Game::Game(const sf::Font &font): m_font(font) {
     sf::ContextSettings settings;
     settings.antiAliasingLevel = 8;
     m_window.create(sf::VideoMode(config::WINDOW_SIZE), "SmokeFX", sf::State::Windowed, settings);
@@ -81,4 +81,8 @@ void Game::changeState(std::unique_ptr<GameState> state) {
 
 sf::RenderWindow &Game::getWindow() {
     return m_window;
+}
+
+sf::Font Game::getFont() {
+    return m_font;
 }
