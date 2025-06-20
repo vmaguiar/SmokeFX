@@ -24,6 +24,8 @@ class SmokeMaker {
     sf::VertexArray m_ONsmokeMakerShapePointerOutline;
 
     sf::Vector2f m_position;
+    sf::Color m_mainColor = sf::Color(255, 128, 0);
+    sf::Color m_outlineColor = sf::Color(192, 192, 192);
     int m_maxParticles;
     float m_particleLifetime;
     sf::Color m_particleColor;
@@ -47,9 +49,12 @@ class SmokeMaker {
 
     static sf::Vector2f calculateAimDirection(sf::Vector2f target, sf::Vector2f source);
 
+    void updateActiveSmokeMakerVisuals();
+
 public:
-    SmokeMaker(sf::Vector2f position, int maxParticles, float particleLifeTime, sf::Color particleColor, float particleSize,
-               sf::Vector2f inicialDirection, float initialSpeed, float particlePerSecond);
+    SmokeMaker(sf::Vector2f position, sf::Color mainColor, sf::Color outlineColor, int maxParticles, float particleLifeTime,
+               sf::Color particleColor, float particleSize,
+               sf::Vector2f initialDirection, float initialSpeed, float particlePerSecond);
 
     // methods SimulationState will call
     void update(float dt);
@@ -63,7 +68,7 @@ public:
 
     void setIsActive(bool active);
 
-    // methods to pass feature flags
+    // methods to pass features flags
     void setEnabledFeatures(const std::map<SimulationFeature, bool> &features);
 
     // utils

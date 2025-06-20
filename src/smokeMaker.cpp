@@ -5,14 +5,19 @@
 #include "configConsts.hpp"
 
 
-SmokeMaker::SmokeMaker(sf::Vector2f position, int maxParticles, float particleLifeTime, sf::Color particleColor,
-                       float particleSize, sf::Vector2f inicialDirection, float initialSpeed,
-                       float particlePerSecond): m_position(position),
+SmokeMaker::SmokeMaker(sf::Vector2f position, sf::Color mainColor, sf::Color outlineColor, int maxParticles,
+                       float particleLifeTime, sf::Color particleColor,
+                       float particleSize, sf::Vector2f initialDirection, float initialSpeed,
+                       float particlePerSecond): m_ONsmokeMakerShapePointer(sf::PrimitiveType::Triangles, 3),
+                                                 m_ONsmokeMakerShapePointerOutline(sf::PrimitiveType::Triangles, 3),
+                                                 m_position(position),
+                                                 m_mainColor(mainColor),
+                                                 m_outlineColor(outlineColor),
                                                  m_maxParticles(maxParticles),
                                                  m_particleLifetime(particleLifeTime),
                                                  m_particleColor(particleColor),
                                                  m_particleSize(particleSize),
-                                                 m_currentLaunchDirection(inicialDirection),
+                                                 m_currentLaunchDirection(initialDirection),
                                                  m_initialSpeed(initialSpeed),
                                                  m_particlesPerSecond(particlePerSecond),
                                                  m_spawnAccumulator(0.0f) {
@@ -24,7 +29,7 @@ SmokeMaker::SmokeMaker(sf::Vector2f position, int maxParticles, float particleLi
     m_OFFsmokeMakerShape.setOrigin({config::EMITTER_RADIUS, config::EMITTER_RADIUS});
     m_OFFsmokeMakerShape.setPosition(m_position);
 
-    // On Shape -> acho que tem que ser implementado no update, pois o formato aponta pra m_currentLauchDirection
+    // On Shape ->
     m_ONsmokeMakerShape = m_OFFsmokeMakerShape;
 
 
@@ -35,6 +40,8 @@ SmokeMaker::SmokeMaker(sf::Vector2f position, int maxParticles, float particleLi
     m_enabledFeatures[SimulationFeature::Rotation] = false;
     m_enabledFeatures[SimulationFeature::Texture] = false;
     m_enabledFeatures[SimulationFeature::SteamEffect] = false;
+
+    updateActiveSmokeMakerVisuals();
 }
 
 void SmokeMaker::spawnNewParticles(float dt) {
@@ -49,7 +56,7 @@ void SmokeMaker::spawnNewParticles(float dt) {
 
                 // Basics Particle proprieties
                 sf::Vector2f particleVelocity = m_currentLaunchDirection * m_initialSpeed;
-                sf::Vector2f particleAcceleration = sf::Vector2f(0.0f, 0.0f); // Acumuladores de aceleração
+                sf::Vector2f particleAcceleration = sf::Vector2f(0.0f, 0.0f);
                 float particleRotationSpeed = 0.0f;
                 float particleScaleRate = 0.0f;
                 float particleAlphaDecayRate = 0.0f;
@@ -112,6 +119,45 @@ sf::Vector2f SmokeMaker::calculateAimDirection(sf::Vector2f target, sf::Vector2f
     return direction / length;
 }
 
+void SmokeMaker::updateActiveSmokeMakerVisuals() {
+    float pointerLength = config::EMITTER_RADIUS * 2.15f;
+    float pointerWidth = config::EMITTER_RADIUS * 1.0f;
+    float outlineThickness = m_ONsmokeMakerShape.getOutlineThickness();
+
+    sf::Vector2f perpendicularDirection = sf::Vector2f(-m_currentLaunchDirection.y, m_currentLaunchDirection.x);
+
+    m_ONsmokeMakerShapePointer.clear();
+    m_ONsmokeMakerShapePointerOutline.clear();
+
+    // tip of triangle
+    sf::Vector2f p0_pointer = m_position + (m_currentLaunchDirection * pointerLength);
+    sf::Vector2f p0_outline = m_position + (m_currentLaunchDirection * (pointerLength + outlineThickness));
+
+    // base of the triangle
+    // top point
+    sf::Vector2f p1_pointer = m_position - (perpendicularDirection * pointerWidth);
+    sf::Vector2f p1_outline = m_position - (perpendicularDirection * (pointerWidth - outlineThickness));
+    // low point
+    sf::Vector2f p2_pointer = m_position + (perpendicularDirection * pointerWidth);
+    sf::Vector2f p2_outline = m_position + (perpendicularDirection * (pointerWidth + outlineThickness));
+
+    // Pointer (orange triangle)
+    m_ONsmokeMakerShapePointer[0].position = p0_pointer;
+    m_ONsmokeMakerShapePointer[0].color = m_mainColor;
+    m_ONsmokeMakerShapePointer[1].position = p1_pointer;
+    m_ONsmokeMakerShapePointer[1].color = m_mainColor;
+    m_ONsmokeMakerShapePointer[2].position = p2_pointer;
+    m_ONsmokeMakerShapePointer[2].color = m_mainColor;
+
+    // Outline (gray triangle)
+    m_ONsmokeMakerShapePointerOutline[0].position = p0_outline;
+    m_ONsmokeMakerShapePointerOutline[0].color = m_outlineColor;
+    m_ONsmokeMakerShapePointerOutline[1].position = p1_outline;
+    m_ONsmokeMakerShapePointerOutline[1].color = m_outlineColor;
+    m_ONsmokeMakerShapePointerOutline[2].position = p2_outline;
+    m_ONsmokeMakerShapePointerOutline[2].color = m_outlineColor;
+}
+
 
 void SmokeMaker::update(float dt) {
     if (m_isActive) {
@@ -141,16 +187,13 @@ void SmokeMaker::setPosition(sf::Vector2f newPosition) {
     m_position = newPosition;
     m_OFFsmokeMakerShape.setPosition(m_position);
     m_ONsmokeMakerShape.setPosition(m_position);
+
+    updateActiveSmokeMakerVisuals();
 }
 
 void SmokeMaker::setAimTarget(sf::Vector2f targetPos) {
-    // ainda nao sei como implementar isso aqui
     m_currentLaunchDirection = calculateAimDirection(targetPos, m_position);
-    if (m_isActive && (m_currentLaunchDirection.x != 0 || m_currentLaunchDirection.y != 0)) {
-        float angle = std::atan2(m_currentLaunchDirection.y, m_currentLaunchDirection.x) * 180.0f / M_PI;
-        m_ONsmokeMakerShapePointer.setRotation(sf::degrees(angle + 90.0f));
-        m_ONsmokeMakerShapePointerOutline.setRotation(sf::degrees(angle + 90.0f));
-    }
+    updateActiveSmokeMakerVisuals();
 }
 
 void SmokeMaker::setIsActive(bool active) {
