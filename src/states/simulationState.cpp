@@ -29,14 +29,15 @@ SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(g
     updateFeatureStatusText();
 }
 
-SimulationState::~SimulationState() {
-}
+SimulationState::~SimulationState() = default;
 
 void SimulationState::handleEvent(const sf::Event &event) {
     if (const auto *mousePressed = event.getIf<sf::Event::MouseButtonPressed>()) {
         if (mousePressed->button == sf::Mouse::Button::Left) {
             if (event.is<sf::Event::MouseMoved>()) {
-                m_smokeMaker.setAimTarget({sf::Mouse::getPosition(m_window).x, sf::Mouse::getPosition(m_window).y});
+                m_smokeMaker.setAimTarget(
+                    m_window.mapPixelToCoords(
+                        sf::Vector2i(sf::Mouse::getPosition(m_window).x, sf::Mouse::getPosition(m_window).y)));
             }
             m_isSmokeMakerActive = true;
             m_smokeMaker.setIsActive(true);
