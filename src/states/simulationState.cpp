@@ -11,7 +11,7 @@ SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(g
                                                                             config::EMITTER_OUTILINE_COLOR,
                                                                             config::MAX_PARTICLES, config::PARTICLE_LIFETIME,
                                                                             sf::Color::White, config::PARTICLE_SIZE,
-                                                                            sf::Vector2f({0.0f, -1.0f}),
+                                                                            sf::Vector2f({1.0f, 0.0f}),
                                                                             config::PARTICLE_INIT_SPEED,
                                                                             config::PARTICLE_SPAWN_RATE),
                                                                         m_font(m_game.getFont()),
@@ -32,13 +32,13 @@ SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(g
 SimulationState::~SimulationState() = default;
 
 void SimulationState::handleEvent(const sf::Event &event) {
+    if (event.is<sf::Event::MouseMoved>()) {
+        const auto *mouseMoved = event.getIf<sf::Event::MouseMoved>();
+        m_smokeMaker.setAimTarget(static_cast<sf::Vector2f>(mouseMoved->position));
+        std::cout << "Mouse mexeu: (" << mouseMoved->position.x << ", " << mouseMoved->position.y << ")" << std::endl;
+    }
     if (const auto *mousePressed = event.getIf<sf::Event::MouseButtonPressed>()) {
         if (mousePressed->button == sf::Mouse::Button::Left) {
-            if (event.is<sf::Event::MouseMoved>()) {
-                m_smokeMaker.setAimTarget(
-                    m_window.mapPixelToCoords(
-                        sf::Vector2i(sf::Mouse::getPosition(m_window).x, sf::Mouse::getPosition(m_window).y)));
-            }
             m_isSmokeMakerActive = true;
             m_smokeMaker.setIsActive(true);
         }
