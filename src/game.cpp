@@ -55,7 +55,6 @@ void Game::run() {
         if (!m_statesStack.empty()) {
             m_statesStack.top()->draw(m_window);
         }
-
         m_window.display();
     }
 }

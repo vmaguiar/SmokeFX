@@ -107,7 +107,6 @@ void SimulationState::draw(sf::RenderWindow &window) {
     window.clear();
     m_smokeMaker.draw(window);
     window.draw(m_featureStatusText);
-    window.display();
 }
 
 void SimulationState::updateFeatureStatusText() {
