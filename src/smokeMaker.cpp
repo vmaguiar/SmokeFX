@@ -94,7 +94,7 @@ void SmokeMaker::spawnNewParticles(float dt) {
                                          particleAcceleration, particleRotationSpeed, particleScaleRate, particleAlphaDecayRate);
             }
         }
-        m_spawnAccumulator -= static_cast<float>(count);
+        m_spawnAccumulator = m_spawnAccumulator - (static_cast<float>(count) / m_particlesPerSecond);
     }
 }
 
