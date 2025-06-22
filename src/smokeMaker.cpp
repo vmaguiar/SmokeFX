@@ -47,7 +47,7 @@ SmokeMaker::SmokeMaker(sf::Vector2f position, sf::Color mainColor, sf::Color out
 void SmokeMaker::spawnNewParticles(float dt) {
     m_spawnAccumulator += dt;
     float particlesToSpawn = m_spawnAccumulator * m_particlesPerSecond;
-    // 1 second
+    // at least 1 particle to spawn
     if (particlesToSpawn >= 1.0f) {
         int count = static_cast<int>(particlesToSpawn);
         for (int i = 0; i < count; i++) {
@@ -56,14 +56,15 @@ void SmokeMaker::spawnNewParticles(float dt) {
 
                 // Basics Particle proprieties
                 sf::Vector2f particleVelocity = m_currentLaunchDirection * m_initialSpeed;
-                sf::Vector2f particleAcceleration = sf::Vector2f(0.0f, 0.0f);
+                sf::Vector2f particleAcceleration = {0.0f, 0.0f};
                 float particleRotationSpeed = 0.0f;
                 float particleScaleRate = 0.0f;
                 float particleAlphaDecayRate = 0.0f;
 
-                // Desvio aleatório para a direção (sempre presente para efeito de spray)
-                // Nao sei ainda se faço
+                // here there may be a small random direction variation
 
+                //// y = mx + b
+                // growth rate = final / time
                 // 1. Smooth Stop Configs
                 if (m_enabledFeatures[SimulationFeature::SmoothStop]) {
                     if (m_particleLifetime > 0) {
@@ -73,14 +74,23 @@ void SmokeMaker::spawnNewParticles(float dt) {
 
                 // 2. Decreasing Alpha Configs
                 if (m_enabledFeatures[SimulationFeature::DecreasingAlpha]) {
+                    if (m_particleLifetime > 0) {
+                        particleAlphaDecayRate = (static_cast<float>(m_particleColor.a) / m_particleLifetime);
+                    }
                 }
 
                 // 3. Increasing Size Configs
                 if (m_enabledFeatures[SimulationFeature::IncreasingSize]) {
+                    if (m_particleLifetime > 0) {
+                        particleScaleRate = 500.0f / m_particleLifetime;
+                    }
                 }
 
                 // 4. Rotation Configs
                 if (m_enabledFeatures[SimulationFeature::Rotation]) {
+                    if (m_particleLifetime > 0) {
+                        particleRotationSpeed = 360.0f / m_particleLifetime;
+                    }
                 }
 
                 // 5. Steam Effect Configs
