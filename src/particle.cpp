@@ -1,10 +1,12 @@
 #include "particle.hpp"
-
+#include <cmath>
 #include <iostream>
 
-Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocity, sf::Color startColor, float startSize, float lifeTime,
+Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocity, float velDecayRate, sf::Color startColor,
+                   float startSize, float lifeTime,
                    sf::Vector2f startAcceleration, float rotationSpeed, float scaleRate,
                    float alphaDecayRate): m_velocity(startVelocity),
+                                          m_velDecayRate(velDecayRate),
                                           m_acceleration(startAcceleration),
                                           m_currentRotation(0.0f),
                                           m_rotationSpeed(rotationSpeed),
@@ -32,12 +34,17 @@ void Particle::update(float dt) {
     }
 
     // 1. Apply acceleration for smooth stop and steam effect
-    m_velocity += m_acceleration * dt;
+    // Pos(t) = PosInit + (PosFinal - PosInit) * (1 - e^(-k*t))
+    // Vel(t) = (PosFinal - PosInit) * k * e^(-k*t)
+    // PosInit = 0, k = decay rate (podemos variar), PosFinal = podemos variar
+    m_velocity = m_velocity * m_velDecayRate;
+    // std::cout << 0.5f * static_cast<float>(std::exp(-0.5 * dt)) << std::endl;
+    // m_velocity = m_velocity + (1500.0f * 0.1f * std::exp(-0.1 * dt));
     m_shape.move(dt * m_velocity);
 
     // 2. Apply rotation
     if (m_rotationSpeed != 0.0f) {
-        m_currentRotation += m_rotationSpeed * dt;
+        m_currentRotation = m_currentRotation + (m_rotationSpeed * dt);
 
         if (m_currentRotation >= 360.0f) {
             m_currentRotation -= 360.0f;

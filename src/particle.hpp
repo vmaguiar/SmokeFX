@@ -6,6 +6,7 @@
 class Particle {
     sf::RectangleShape m_shape;
     sf::Vector2f m_velocity;
+    float m_velDecayRate;
     sf::Vector2f m_acceleration;
 
     float m_currentRotation; // degrees
@@ -23,7 +24,8 @@ class Particle {
     float m_lifetime; // total in seconds
 
 public:
-    Particle(sf::Vector2f startPosition, sf::Vector2f startVelocity, sf::Color startColor, float startSize, float lifeTime,
+    Particle(sf::Vector2f startPosition, sf::Vector2f startVelocity, float velDecayRate, sf::Color startColor, float startSize,
+             float lifeTime,
              sf::Vector2f startAcceleration = sf::Vector2f(0.0f, 0.0f), float rotationSpeed = 0.0f, float scaleRate = 0.0f,
              float alphaDecayRate = 0.0f);
 

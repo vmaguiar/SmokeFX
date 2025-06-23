@@ -57,7 +57,9 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 // Basics Particle proprieties
                 sf::Vector2f particleVelocity = m_currentLaunchDirection * m_initialSpeed;
                 sf::Vector2f particleAcceleration = {0.0f, 0.0f};
+                float velDecayRate = 1.0f;
                 float particleRotationSpeed = 0.0f;
+                float rotationPerLifeTime = 0.0f;
                 float particleScaleRate = 0.0f;
                 float particleAlphaDecayRate = 0.0f;
 
@@ -68,7 +70,11 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 // 1. Smooth Stop Configs
                 if (m_enabledFeatures[SimulationFeature::SmoothStop]) {
                     if (m_particleLifetime > 0) {
-                        particleAcceleration += -particleVelocity / m_particleLifetime;
+                        // Pos(t) = PosInit + (PosFinal - PosInit) * (1 - e^(-k*t))
+                        // Vel(t) = (PosFinal - PosInit) * k * e^(-k*t)
+                        // PosInit = 0, k = decay rate (podemos variar), PosFinal = podemos variar
+                        // particleAcceleration += -particleVelocity / m_particleLifetime;
+                        velDecayRate = static_cast<float>(std::exp(-0.2 * dt));
                     }
                 }
 
@@ -89,7 +95,7 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 // 4. Rotation Configs
                 if (m_enabledFeatures[SimulationFeature::Rotation]) {
                     if (m_particleLifetime > 0) {
-                        particleRotationSpeed = 360.0f / m_particleLifetime;
+                        particleRotationSpeed = rotationPerLifeTime * (360.0f / m_particleLifetime);
                     }
                 }
 
@@ -100,7 +106,8 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 // 6. Texture Configs
                 // W.I.P
 
-                m_particles.emplace_back(m_position, particleVelocity, m_particleColor, m_particleSize, m_particleLifetime,
+                m_particles.emplace_back(m_position, particleVelocity, velDecayRate, m_particleColor, m_particleSize,
+                                         m_particleLifetime,
                                          particleAcceleration, particleRotationSpeed, particleScaleRate, particleAlphaDecayRate);
             }
         }
