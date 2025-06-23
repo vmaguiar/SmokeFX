@@ -1,6 +1,8 @@
 #pragma once
 #include <map>
 #include <vector>
+
+#include "configConsts.hpp"
 #include "particle.hpp"
 #include "SFML/Graphics/CircleShape.hpp"
 
@@ -34,6 +36,10 @@ class SmokeMaker {
     float m_initialSpeed;
     float m_particlesPerSecond;
     float m_spawnAccumulator;
+
+    // config var
+    float m_velK = config::PARTICLE_VEL_DECAY_CONST;
+    float m_rotationPerLifeTime = config::ROTATION_PER_LIFETIME;
 
     std::vector<Particle> m_particles;
     bool m_isActive = false;
@@ -73,4 +79,12 @@ public:
 
     // utils
     sf::Vector2f getPosition() const;
+
+    void adjustParticleVelDecayConst(float delta);
+
+    void adjustRotationSpeedMultiplier(float delta);
+
+    float getAdjustParticleVelDecayConst() const;
+
+    float getAdjustRotationSpeedMultiplier() const;
 };

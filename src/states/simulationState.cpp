@@ -49,6 +49,14 @@ void SimulationState::handleEvent(const sf::Event &event) {
         }
     }
     else if (const auto *keyPressed = event.getIf<sf::Event::KeyPressed>()) {
+        float step = 0.1f;
+        if (keyPressed->scancode == sf::Keyboard::Scancode::LShift || keyPressed->scancode == sf::Keyboard::Scancode::RShift) {
+            step = 0.01f;
+        }
+        else if (keyPressed->scancode == sf::Keyboard::Scancode::LControl || keyPressed->scancode ==
+                 sf::Keyboard::Scancode::RControl) {
+            step = 1.0f;
+        }
         switch (keyPressed->scancode) {
             //Smooth Stop
             case sf::Keyboard::Scancode::Num1:
@@ -88,12 +96,34 @@ void SimulationState::handleEvent(const sf::Event &event) {
                 std::cout << "Steam Effect: " << (m_activeFeatures[SimulationFeature::SteamEffect] ? "ON" : "OFF") << std::endl;
                 break;
 
+            // Velocity Decay Adjustment (Q/A)
+            case sf::Keyboard::Scancode::Q:
+                m_smokeMaker.adjustParticleVelDecayConst(step);
+                break;
+            case sf::Keyboard::Scancode::A:
+                m_smokeMaker.adjustParticleVelDecayConst(-step);
+                break;
+
+            // Decreasing Alpha Multiplier (W/S)
+            // Size Growth Multiplier (E/D)
+
+            // Rotation Multiplier (R/F)
+            case sf::Keyboard::Scancode::R:
+                m_smokeMaker.adjustRotationSpeedMultiplier(step);
+                break;
+            case sf::Keyboard::Scancode::F:
+                m_smokeMaker.adjustRotationSpeedMultiplier(-step);
+                break;
+
+            // Steam Effect Multiplier (T/G)
+
             case sf::Keyboard::Scancode::Escape:
                 m_game.popState();
                 break;
             default:
                 break;
         }
+
         applyFeaturesToSmokeMaker();
         updateFeatureStatusText();
     }
@@ -119,6 +149,14 @@ void SimulationState::updateFeatureStatusText() {
     statusString += "4 - Rotation: " + std::string(m_activeFeatures[SimulationFeature::Rotation] ? "ON" : "OFF") + "\n";
     // statusString += "5 - Texture: " + std::string(m_activeFeatures[SimulationFeature::Texture] ? "ON" : "OFF") + "\n";
     statusString += "6 - Steam Effect: " + std::string(m_activeFeatures[SimulationFeature::SteamEffect] ? "ON" : "OFF") + "\n";
+
+    statusString += "\n-- Ajustes (Q/A, W/S, E/D, R/F) --\n";
+    statusString += "Smooth Stop Const: " + std::to_string(m_smokeMaker.getAdjustParticleVelDecayConst()) + "\n";
+    statusString += "Alpha Decay M: \n";
+    statusString += "Size Growth M: \n";
+    statusString += "Rotation Speed M: " + std::to_string(m_smokeMaker.getAdjustRotationSpeedMultiplier()) + "\n";
+    statusString += "Steam Accel M: \n";
+
     statusString += "\nMouse Esquerdo: ON/OFF emissor\n";
     statusString += "ESC: Sair";
 

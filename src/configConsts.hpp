@@ -9,14 +9,19 @@ namespace config {
     constexpr float CONFIG_DELTA_TIME = 1.0f / static_cast<float>(MAX_FRAMERATE);
 
     // World Config
+    // emitter
     constexpr float EMITTER_RADIUS = 10.0f;
     constexpr sf::Vector2f EMITTER_START_POSITION = sf::Vector2f(50.0f, WINDOW_SIZE_F.y * 0.5f);
     constexpr sf::Color EMITTER_MAIN_COLOR = sf::Color(255, 128, 0);
     constexpr sf::Color EMITTER_OUTILINE_COLOR = sf::Color(192, 192, 192);
     constexpr int MAX_PARTICLES = 2000;
+    // particle
     constexpr float PARTICLE_LIFETIME = 10.0f;
     constexpr float PARTICLE_INIT_SPEED = 300.0f;
     constexpr float PARTICLE_SPAWN_RATE = 10.0f; // particle per seconds
     constexpr float PARTICLE_SPAWN_TIME = 1.0f / PARTICLE_SPAWN_RATE; // 0.05...
     constexpr float PARTICLE_SIZE = 30.0f;
+    //
+    constexpr float PARTICLE_VEL_DECAY_CONST = 0.2f;
+    constexpr float ROTATION_PER_LIFETIME = 3.0f;
 }

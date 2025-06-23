@@ -1,7 +1,8 @@
 #include "smokeMaker.hpp"
-
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+
 #include "configConsts.hpp"
 
 
@@ -59,7 +60,6 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 sf::Vector2f particleAcceleration = {0.0f, 0.0f};
                 float velDecayRate = 1.0f;
                 float particleRotationSpeed = 0.0f;
-                float rotationPerLifeTime = 0.0f;
                 float particleScaleRate = 0.0f;
                 float particleAlphaDecayRate = 0.0f;
 
@@ -74,7 +74,7 @@ void SmokeMaker::spawnNewParticles(float dt) {
                         // Vel(t) = (PosFinal - PosInit) * k * e^(-k*t)
                         // PosInit = 0, k = decay rate (podemos variar), PosFinal = podemos variar
                         // particleAcceleration += -particleVelocity / m_particleLifetime;
-                        velDecayRate = static_cast<float>(std::exp(-0.2 * dt));
+                        velDecayRate = static_cast<float>(std::exp(-m_velK * dt));
                     }
                 }
 
@@ -95,7 +95,7 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 // 4. Rotation Configs
                 if (m_enabledFeatures[SimulationFeature::Rotation]) {
                     if (m_particleLifetime > 0) {
-                        particleRotationSpeed = rotationPerLifeTime * (360.0f / m_particleLifetime);
+                        particleRotationSpeed = m_rotationPerLifeTime * (360.0f / m_particleLifetime);
                     }
                 }
 
@@ -228,3 +228,23 @@ sf::Vector2f SmokeMaker::getPosition() const {
     return m_position;
 }
 
+void SmokeMaker::adjustParticleVelDecayConst(float delta) {
+    m_velK = m_velK + delta;
+    if (m_velK < 0.0f) {
+        m_velK = 0.0f;
+    }
+    std::cout << "Constant k for smooth stop: " << m_velK << std::endl;
+}
+
+void SmokeMaker::adjustRotationSpeedMultiplier(float delta) {
+    m_rotationPerLifeTime = m_rotationPerLifeTime + delta;
+    std::cout << "lap multiplier: " << m_rotationPerLifeTime << std::endl;
+}
+
+float SmokeMaker::getAdjustParticleVelDecayConst() const {
+    return m_velK;
+}
+
+float SmokeMaker::getAdjustRotationSpeedMultiplier() const {
+    return m_rotationPerLifeTime;
+}
