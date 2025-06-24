@@ -2,14 +2,17 @@
 #include <cmath>
 #include <iostream>
 
-Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocity, float velDecayRate, sf::Color startColor,
+Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirection, float velocityMagnitude, float velDecayRate,
+                   sf::Color startColor,
                    float startSize, float lifeTime,
-                   sf::Vector2f startAcceleration, float rotationSpeed, float scaleRate,
-                   float alphaDecayRate): m_velocity(startVelocity),
+                   sf::Vector2f startAcceleration, float initialMaxRotationSpeed, float rotDecayRate, float scaleRate,
+                   float alphaDecayRate): m_velocityDirection(startVelocityDirection),
+                                          m_initialMaxVelocityMagnitude(velocityMagnitude),
                                           m_velDecayRate(velDecayRate),
                                           m_acceleration(startAcceleration),
                                           m_currentRotation(0.0f),
-                                          m_rotationSpeed(rotationSpeed),
+                                          m_initialMaxRotationSpeed(initialMaxRotationSpeed),
+                                          m_rotDecayRate(rotDecayRate),
                                           m_initialSize(startSize),
                                           m_currentSize(startSize),
                                           m_scaleRate(scaleRate),
@@ -17,34 +20,35 @@ Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocity, float
                                           m_currentAlpha(static_cast<float>(startColor.a)),
                                           m_decayRate(alphaDecayRate),
                                           m_spawnTime(std::chrono::high_resolution_clock::now()),
-                                          m_lifetime(lifeTime) {
+                                          m_lifetime(lifeTime),
+                                          m_totalElapsedTime(0.0f) {
     m_shape.setSize({m_initialSize, m_initialSize});
     m_shape.setFillColor(m_initialColor);
     m_shape.setOrigin({m_initialSize * 0.5f, m_initialSize * 0.5f}); // origin in the middle of the square
     m_shape.setPosition(startPosition);
+
+    m_currentVelocity = m_velocityDirection * m_initialMaxVelocityMagnitude;
 }
 
 void Particle::update(float dt) {
-    auto now = std::chrono::high_resolution_clock::now();
-    float elapsedTime = std::chrono::duration_cast<std::chrono::duration<float> >(now - m_spawnTime).count();
+    m_totalElapsedTime = m_totalElapsedTime + dt;
 
-    // if particle is already dead dont update
-    if (elapsedTime >= m_lifetime && m_currentAlpha <= 0.0f) {
+    // if particle is already dead don't update
+    if (isDead()) {
         return;
     }
 
     // 1. Apply acceleration for smooth stop and steam effect
-    // Pos(t) = PosInit + (PosFinal - PosInit) * (1 - e^(-k*t))
-    // Vel(t) = (PosFinal - PosInit) * k * e^(-k*t)
-    // PosInit = 0, k = decay rate (podemos variar), PosFinal = podemos variar
-    m_velocity = m_velocity * m_velDecayRate;
-    // std::cout << 0.5f * static_cast<float>(std::exp(-0.5 * dt)) << std::endl;
-    // m_velocity = m_velocity + (1500.0f * 0.1f * std::exp(-0.1 * dt));
-    m_shape.move(dt * m_velocity);
+    // Vel(t) = VelInitialMax * e^(-k*t)
+    float currentSpeedMagnitude = m_initialMaxVelocityMagnitude * std::exp(-m_velDecayRate * m_totalElapsedTime);
+    m_currentVelocity = m_velocityDirection * currentSpeedMagnitude;
+    m_shape.move(dt * m_currentVelocity);
 
     // 2. Apply rotation
-    if (m_rotationSpeed != 0.0f) {
-        m_currentRotation = m_currentRotation + (m_rotationSpeed * dt);
+    if (m_initialMaxRotationSpeed != 0.0f) {
+        // Omega(t) = OmegaInitialMax * e^(-k*t)
+        m_currentRotationSpeed = m_initialMaxRotationSpeed * std::exp(-m_rotDecayRate * m_totalElapsedTime);
+        m_currentRotation = m_currentRotation + (m_currentRotationSpeed * dt);
 
         if (m_currentRotation >= 360.0f) {
             m_currentRotation -= 360.0f;
@@ -52,7 +56,7 @@ void Particle::update(float dt) {
         else if (m_currentRotation < 0.0f) {
             m_currentRotation += 360.0f;
         }
-        m_shape.setRotation(sf::degrees(m_rotationSpeed));
+        m_shape.setRotation(sf::degrees(m_currentRotation));
     }
 
     // 3. Apply increasing size
@@ -86,9 +90,7 @@ void Particle::draw(sf::RenderWindow &window) const {
 
 
 bool Particle::isDead() const {
-    auto now = std::chrono::high_resolution_clock::now();
-    float elapsedTime = std::chrono::duration_cast<std::chrono::duration<float> >(now - m_spawnTime).count();
-    return elapsedTime >= m_lifetime || m_currentAlpha <= 0.0f;
+    return m_totalElapsedTime >= m_lifetime || m_currentAlpha <= 0.0f;
 }
 
 
@@ -97,7 +99,7 @@ sf::Vector2f Particle::getPosition() const {
 }
 
 sf::Vector2f Particle::getVelocity() const {
-    return m_velocity;
+    return m_currentVelocity;
 }
 
 void Particle::setPosition(sf::Vector2f newPosition) {
@@ -105,5 +107,5 @@ void Particle::setPosition(sf::Vector2f newPosition) {
 }
 
 void Particle::setVelocity(sf::Vector2f startVelocity) {
-    m_velocity = startVelocity;
+    m_velocityDirection = startVelocity;
 }

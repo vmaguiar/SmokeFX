@@ -33,12 +33,13 @@ class SmokeMaker {
     sf::Color m_particleColor;
     float m_particleSize;
     sf::Vector2f m_currentLaunchDirection;
-    float m_initialSpeed;
+    float m_particleInitialSpeed;
     float m_particlesPerSecond;
     float m_spawnAccumulator;
 
     // config var
-    float m_velK = config::PARTICLE_VEL_DECAY_CONST;
+    float m_velKConst = config::PARTICLE_VEL_DECAY_CONST;
+    float m_rotKConst = config::PARTICLE_VEL_DECAY_CONST;
     float m_rotationPerLifeTime = config::ROTATION_PER_LIFETIME;
 
     std::vector<Particle> m_particles;
@@ -80,11 +81,13 @@ public:
     // utils
     sf::Vector2f getPosition() const;
 
-    void adjustParticleVelDecayConst(float delta);
+    void adjustParticleVelKConst(float delta);
+
+    void adjustParticleRotKConst(float delta);
 
     void adjustRotationSpeedMultiplier(float delta);
 
-    float getAdjustParticleVelDecayConst() const;
+    float getParticleVelKConst() const;
 
-    float getAdjustRotationSpeedMultiplier() const;
+    float getRotationSpeedMultiplier() const;
 };

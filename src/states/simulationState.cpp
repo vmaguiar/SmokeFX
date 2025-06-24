@@ -51,10 +51,12 @@ void SimulationState::handleEvent(const sf::Event &event) {
     else if (const auto *keyPressed = event.getIf<sf::Event::KeyPressed>()) {
         float step = 0.1f;
         if (keyPressed->scancode == sf::Keyboard::Scancode::LShift || keyPressed->scancode == sf::Keyboard::Scancode::RShift) {
+            // nao ta entrando aqui
             step = 0.01f;
         }
         else if (keyPressed->scancode == sf::Keyboard::Scancode::LControl || keyPressed->scancode ==
                  sf::Keyboard::Scancode::RControl) {
+            // aqui tambem nao
             step = 1.0f;
         }
         switch (keyPressed->scancode) {
@@ -98,10 +100,10 @@ void SimulationState::handleEvent(const sf::Event &event) {
 
             // Velocity Decay Adjustment (Q/A)
             case sf::Keyboard::Scancode::Q:
-                m_smokeMaker.adjustParticleVelDecayConst(step);
+                m_smokeMaker.adjustParticleVelKConst(step);
                 break;
             case sf::Keyboard::Scancode::A:
-                m_smokeMaker.adjustParticleVelDecayConst(-step);
+                m_smokeMaker.adjustParticleVelKConst(-step);
                 break;
 
             // Decreasing Alpha Multiplier (W/S)
@@ -140,7 +142,7 @@ void SimulationState::draw(sf::RenderWindow &window) {
 }
 
 void SimulationState::updateFeatureStatusText() {
-    std::string statusString = "Funcionalidades Ativas:\n";
+    std::string statusString = "Activated Features:\n";
     statusString += "1 - Smooth Stop: " + std::string(m_activeFeatures[SimulationFeature::SmoothStop] ? "ON" : "OFF") + "\n";
     statusString += "2 - Decreasing Alpha: " + std::string(m_activeFeatures[SimulationFeature::DecreasingAlpha] ? "ON" : "OFF") +
             "\n";
@@ -150,15 +152,15 @@ void SimulationState::updateFeatureStatusText() {
     // statusString += "5 - Texture: " + std::string(m_activeFeatures[SimulationFeature::Texture] ? "ON" : "OFF") + "\n";
     statusString += "6 - Steam Effect: " + std::string(m_activeFeatures[SimulationFeature::SteamEffect] ? "ON" : "OFF") + "\n";
 
-    statusString += "\n-- Ajustes (Q/A, W/S, E/D, R/F) --\n";
-    statusString += "Smooth Stop Const: " + std::to_string(m_smokeMaker.getAdjustParticleVelDecayConst()) + "\n";
+    statusString += "\n-- Tweaks (Q/A, W/S, E/D, R/F) --\n";
+    statusString += "Smooth Stop Const: " + std::to_string(m_smokeMaker.getParticleVelKConst()) + "\n";
     statusString += "Alpha Decay M: \n";
     statusString += "Size Growth M: \n";
-    statusString += "Rotation Speed M: " + std::to_string(m_smokeMaker.getAdjustRotationSpeedMultiplier()) + "\n";
+    statusString += "Rotation Speed M: " + std::to_string(m_smokeMaker.getRotationSpeedMultiplier()) + "\n";
     statusString += "Steam Accel M: \n";
 
-    statusString += "\nMouse Esquerdo: ON/OFF emissor\n";
-    statusString += "ESC: Sair";
+    statusString += "\nLeft Mouse: ON/OFF emissor\n";
+    statusString += "ESC: Exit";
 
     m_featureStatusText.setString(statusString);
 }

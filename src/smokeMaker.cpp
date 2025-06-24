@@ -19,7 +19,7 @@ SmokeMaker::SmokeMaker(sf::Vector2f position, sf::Color mainColor, sf::Color out
                                                  m_particleColor(particleColor),
                                                  m_particleSize(particleSize),
                                                  m_currentLaunchDirection(initialDirection),
-                                                 m_initialSpeed(initialSpeed),
+                                                 m_particleInitialSpeed(initialSpeed),
                                                  m_particlesPerSecond(particlePerSecond),
                                                  m_spawnAccumulator(0.0f) {
     // Off Shape
@@ -56,26 +56,22 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 // Logic for particles features config
 
                 // Basics Particle proprieties
-                sf::Vector2f particleVelocity = m_currentLaunchDirection * m_initialSpeed;
                 sf::Vector2f particleAcceleration = {0.0f, 0.0f};
-                float velDecayRate = 1.0f;
-                float particleRotationSpeed = 0.0f;
+                float particleInitialRotationSpeed = 0.0f;
                 float particleScaleRate = 0.0f;
                 float particleAlphaDecayRate = 0.0f;
 
                 // here there may be a small random direction variation
 
-                //// y = mx + b
-                // growth rate = final / time
+
                 // 1. Smooth Stop Configs
                 if (m_enabledFeatures[SimulationFeature::SmoothStop]) {
+                    m_velKConst = config::PARTICLE_VEL_DECAY_CONST;
                     if (m_particleLifetime > 0) {
-                        // Pos(t) = PosInit + (PosFinal - PosInit) * (1 - e^(-k*t))
-                        // Vel(t) = (PosFinal - PosInit) * k * e^(-k*t)
-                        // PosInit = 0, k = decay rate (podemos variar), PosFinal = podemos variar
-                        // particleAcceleration += -particleVelocity / m_particleLifetime;
-                        velDecayRate = static_cast<float>(std::exp(-m_velK * dt));
                     }
+                }
+                else {
+                    m_velKConst = 0.0001f;
                 }
 
                 // 2. Decreasing Alpha Configs
@@ -95,7 +91,7 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 // 4. Rotation Configs
                 if (m_enabledFeatures[SimulationFeature::Rotation]) {
                     if (m_particleLifetime > 0) {
-                        particleRotationSpeed = m_rotationPerLifeTime * (360.0f / m_particleLifetime);
+                        particleInitialRotationSpeed = m_rotationPerLifeTime / m_particleLifetime;
                     }
                 }
 
@@ -106,9 +102,12 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 // 6. Texture Configs
                 // W.I.P
 
-                m_particles.emplace_back(m_position, particleVelocity, velDecayRate, m_particleColor, m_particleSize,
+                m_particles.emplace_back(m_position, m_currentLaunchDirection, m_particleInitialSpeed, m_velKConst,
+                                         m_particleColor,
+                                         m_particleSize,
                                          m_particleLifetime,
-                                         particleAcceleration, particleRotationSpeed, particleScaleRate, particleAlphaDecayRate);
+                                         particleAcceleration, particleInitialRotationSpeed, m_rotKConst, particleScaleRate,
+                                         particleAlphaDecayRate);
             }
         }
         m_spawnAccumulator = m_spawnAccumulator - (static_cast<float>(count) / m_particlesPerSecond);
@@ -143,8 +142,6 @@ void SmokeMaker::updateActiveSmokeMakerVisuals() {
 
     sf::Vector2f perpendicularDirection = sf::Vector2f(-m_currentLaunchDirection.y, m_currentLaunchDirection.x);
 
-    // m_ONsmokeMakerShapePointer.clear();
-    // m_ONsmokeMakerShapePointerOutline.clear();
 
     // tip of triangle
     sf::Vector2f p0_pointer = m_position + (m_currentLaunchDirection * pointerLength);
@@ -228,23 +225,29 @@ sf::Vector2f SmokeMaker::getPosition() const {
     return m_position;
 }
 
-void SmokeMaker::adjustParticleVelDecayConst(float delta) {
-    m_velK = m_velK + delta;
-    if (m_velK < 0.0f) {
-        m_velK = 0.0f;
+void SmokeMaker::adjustParticleVelKConst(float delta) {
+    m_velKConst = m_velKConst + delta;
+    if (m_velKConst < 0.0f) {
+        m_velKConst = 0.0f;
     }
-    std::cout << "Constant k for smooth stop: " << m_velK << std::endl;
+    std::cout << "Constant k for smooth stop: " << m_velKConst << std::endl;
 }
 
+void SmokeMaker::adjustParticleRotKConst(float delta) {
+    m_rotKConst = m_rotKConst + delta;
+    std::cout << "Const k for Rotation speed decay: " << m_rotationPerLifeTime << std::endl;
+}
+
+
 void SmokeMaker::adjustRotationSpeedMultiplier(float delta) {
-    m_rotationPerLifeTime = m_rotationPerLifeTime + delta;
+    m_rotationPerLifeTime = m_rotationPerLifeTime + (delta * 360.0f);
     std::cout << "lap multiplier: " << m_rotationPerLifeTime << std::endl;
 }
 
-float SmokeMaker::getAdjustParticleVelDecayConst() const {
-    return m_velK;
+float SmokeMaker::getParticleVelKConst() const {
+    return m_velKConst;
 }
 
-float SmokeMaker::getAdjustRotationSpeedMultiplier() const {
+float SmokeMaker::getRotationSpeedMultiplier() const {
     return m_rotationPerLifeTime;
 }

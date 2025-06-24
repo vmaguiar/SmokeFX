@@ -5,12 +5,17 @@
 
 class Particle {
     sf::RectangleShape m_shape;
-    sf::Vector2f m_velocity;
+    sf::Vector2f m_velocityDirection;
+    float m_initialMaxVelocityMagnitude;
+    sf::Vector2f m_currentVelocity;
     float m_velDecayRate;
     sf::Vector2f m_acceleration;
 
+    // rotation
     float m_currentRotation; // degrees
-    float m_rotationSpeed; // degrees per seconds
+    float m_initialMaxRotationSpeed; // degrees per sec
+    float m_currentRotationSpeed = 0.0f; // degrees per sec
+    float m_rotDecayRate;
 
     float m_initialSize;
     float m_currentSize;
@@ -22,11 +27,15 @@ class Particle {
 
     std::chrono::high_resolution_clock::time_point m_spawnTime;
     float m_lifetime; // total in seconds
+    float m_totalElapsedTime;
 
 public:
-    Particle(sf::Vector2f startPosition, sf::Vector2f startVelocity, float velDecayRate, sf::Color startColor, float startSize,
+    Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirection, float velocityMagnitude, float velDecayRate,
+             sf::Color startColor, float startSize,
              float lifeTime,
-             sf::Vector2f startAcceleration = sf::Vector2f(0.0f, 0.0f), float rotationSpeed = 0.0f, float scaleRate = 0.0f,
+             sf::Vector2f startAcceleration = sf::Vector2f(0.0f, 0.0f), float initialMaxRotationSpeed = 0.0f,
+             float rotDecayRate = 0.0f,
+             float scaleRate = 0.0f,
              float alphaDecayRate = 0.0f);
 
     void update(float dt);

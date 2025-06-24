@@ -23,5 +23,5 @@ namespace config {
     constexpr float PARTICLE_SIZE = 30.0f;
     //
     constexpr float PARTICLE_VEL_DECAY_CONST = 0.2f;
-    constexpr float ROTATION_PER_LIFETIME = 3.0f;
+    constexpr float ROTATION_PER_LIFETIME = 1080.0f; //3 * 360
 }
