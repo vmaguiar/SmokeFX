@@ -59,7 +59,8 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 sf::Vector2f particleAcceleration = {0.0f, 0.0f};
                 float particleInitialRotationSpeed = 0.0f;
                 float particleScaleRate = 0.0f;
-                float particleAlphaDecayRate = 0.0f;
+                float particleInitialMaxAlphaDecaySpeed = 0.0f;
+                // float particleInitialMaxAlpha = 0.0f;
 
                 // here there may be a small random direction variation
 
@@ -71,14 +72,19 @@ void SmokeMaker::spawnNewParticles(float dt) {
                     }
                 }
                 else {
-                    m_velKConst = 0.0001f;
+                    m_velKConst = 0.0f;
                 }
 
                 // 2. Decreasing Alpha Configs
                 if (m_enabledFeatures[SimulationFeature::DecreasingAlpha]) {
                     if (m_particleLifetime > 0) {
-                        particleAlphaDecayRate = (static_cast<float>(m_particleColor.a) / m_particleLifetime);
+                        particleInitialMaxAlphaDecaySpeed = (static_cast<float>(m_particleColor.a) / m_particleLifetime);
+                        // particleInitialMaxAlpha = static_cast<float>(m_particleColor.a);
+                        m_alphaKConst = m_alphaKVariable;
                     }
+                }
+                else {
+                    m_alphaKConst = 0.0f;
                 }
 
                 // 3. Increasing Size Configs
@@ -95,19 +101,19 @@ void SmokeMaker::spawnNewParticles(float dt) {
                     }
                 }
 
-                // 5. Steam Effect Configs
+                // 5. Texture Configs
+                // W.I.P
+
+                // 6. Steam Effect Configs
                 if (m_enabledFeatures[SimulationFeature::SteamEffect]) {
                 }
 
-                // 6. Texture Configs
-                // W.I.P
 
                 m_particles.emplace_back(m_position, m_currentLaunchDirection, m_particleInitialSpeed, m_velKConst,
-                                         m_particleColor,
+                                         m_particleColor, particleInitialMaxAlphaDecaySpeed, m_alphaKConst,
                                          m_particleSize,
                                          m_particleLifetime,
-                                         particleAcceleration, particleInitialRotationSpeed, m_rotKConst, particleScaleRate,
-                                         particleAlphaDecayRate);
+                                         particleAcceleration, particleInitialRotationSpeed, m_rotKConst, particleScaleRate);
             }
         }
         m_spawnAccumulator = m_spawnAccumulator - (static_cast<float>(count) / m_particlesPerSecond);
@@ -233,6 +239,16 @@ void SmokeMaker::adjustParticleVelKConst(float delta) {
     std::cout << "Constant k for smooth stop: " << m_velKConst << std::endl;
 }
 
+void SmokeMaker::adjustParticleAlphaKConst(float delta) {
+    m_alphaKVariable = m_alphaKVariable + delta;
+    std::cout << "Constant k for Decreasing Alpha: " << m_alphaKConst << std::endl;
+}
+
+void SmokeMaker::adjustParticleSizeRate(float delta) {
+    std::cout << "Constant k for Increasing Size: " << std::endl;
+}
+
+
 void SmokeMaker::adjustParticleRotKConst(float delta) {
     m_rotKConst = m_rotKConst + delta;
     std::cout << "Const k for Rotation speed decay: " << m_rotationPerLifeTime << std::endl;
@@ -244,9 +260,23 @@ void SmokeMaker::adjustRotationSpeedMultiplier(float delta) {
     std::cout << "lap multiplier: " << m_rotationPerLifeTime << std::endl;
 }
 
+void SmokeMaker::adjustSteamEffectMultiplier(float delta) {
+    std::cout << "Constant k for smooth stop: " << std::endl;
+}
+
+
 float SmokeMaker::getParticleVelKConst() const {
     return m_velKConst;
 }
+
+float SmokeMaker::getParticleAlphaKConst() const {
+    return m_alphaKConst;
+}
+
+float SmokeMaker::getParticleRotKConst() const {
+    return m_rotKConst;
+}
+
 
 float SmokeMaker::getRotationSpeedMultiplier() const {
     return m_rotationPerLifeTime;

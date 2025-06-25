@@ -2,7 +2,10 @@
 #include <iostream>
 #include "../configConsts.hpp"
 #include "../game.hpp"
-
+/* to do:
+ * - make a clickable option, bc of the number of buttons for the settings
+ * - change the layout of the texts
+ */
 SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(game),
                                                                         m_window(window),
                                                                         m_smokeMaker(
@@ -107,6 +110,12 @@ void SimulationState::handleEvent(const sf::Event &event) {
                 break;
 
             // Decreasing Alpha Multiplier (W/S)
+            case sf::Keyboard::Scancode::W:
+                m_smokeMaker.adjustParticleAlphaKConst(step);
+                break;
+            case sf::Keyboard::Scancode::S:
+                m_smokeMaker.adjustParticleAlphaKConst(-step);
+                break;
             // Size Growth Multiplier (E/D)
 
             // Rotation Multiplier (R/F)
@@ -154,7 +163,7 @@ void SimulationState::updateFeatureStatusText() {
 
     statusString += "\n-- Tweaks (Q/A, W/S, E/D, R/F) --\n";
     statusString += "Smooth Stop Const: " + std::to_string(m_smokeMaker.getParticleVelKConst()) + "\n";
-    statusString += "Alpha Decay M: \n";
+    statusString += "Alpha Decay M: " + std::to_string(m_smokeMaker.getParticleAlphaKConst()) + "\n";
     statusString += "Size Growth M: \n";
     statusString += "Rotation Speed M: " + std::to_string(m_smokeMaker.getRotationSpeedMultiplier()) + "\n";
     statusString += "Steam Accel M: \n";

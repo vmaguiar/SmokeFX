@@ -21,9 +21,13 @@ class Particle {
     float m_currentSize;
     float m_scaleRate; // pixels per seconds ou %/sec
 
+    // color & alpha
     sf::Color m_initialColor;
+    float m_initialMaxAlpha = 255.0f;
     float m_currentAlpha; // (0-255) empty - full
-    float m_decayRate; // alpha per seconds
+    float m_currentAlphaDecay = 0.0f;
+    float m_alphaKConst;
+    float m_alphaDecayRate; // alpha per seconds
 
     std::chrono::high_resolution_clock::time_point m_spawnTime;
     float m_lifetime; // total in seconds
@@ -31,12 +35,11 @@ class Particle {
 
 public:
     Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirection, float velocityMagnitude, float velDecayRate,
-             sf::Color startColor, float startSize,
+             sf::Color startColor, float alphaDecayRate, float alphaKConst, float startSize,
              float lifeTime,
              sf::Vector2f startAcceleration = sf::Vector2f(0.0f, 0.0f), float initialMaxRotationSpeed = 0.0f,
              float rotDecayRate = 0.0f,
-             float scaleRate = 0.0f,
-             float alphaDecayRate = 0.0f);
+             float scaleRate = 0.0f);
 
     void update(float dt);
 
