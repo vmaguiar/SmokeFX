@@ -116,7 +116,14 @@ void SimulationState::handleEvent(const sf::Event &event) {
             case sf::Keyboard::Scancode::S:
                 m_smokeMaker.adjustParticleAlphaKConst(-step);
                 break;
+
             // Size Growth Multiplier (E/D)
+            case sf::Keyboard::Scancode::E:
+                m_smokeMaker.adjustParticleMaxSize(step);
+                break;
+            case sf::Keyboard::Scancode::D:
+                m_smokeMaker.adjustParticleMaxSize(-step);
+                break;
 
             // Rotation Multiplier (R/F)
             case sf::Keyboard::Scancode::R:

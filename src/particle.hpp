@@ -8,8 +8,9 @@ class Particle {
     sf::Vector2f m_velocityDirection;
     float m_initialMaxVelocityMagnitude;
     sf::Vector2f m_currentVelocity;
-    float m_velDecayRate;
+    float m_velDecayRate = 0.0f;
     sf::Vector2f m_acceleration;
+
 
     // rotation
     float m_currentRotation; // degrees
@@ -17,15 +18,18 @@ class Particle {
     float m_currentRotationSpeed = 0.0f; // degrees per sec
     float m_rotDecayRate;
 
+    // size
     float m_initialSize;
     float m_currentSize;
+    float m_maxSize;
     float m_scaleRate; // pixels per seconds ou %/sec
+    float m_sizeKConst = 0.0f;
 
     // color & alpha
     sf::Color m_initialColor;
     float m_initialMaxAlpha = 255.0f;
     float m_currentAlpha; // (0-255) empty - full
-    float m_currentAlphaDecay = 0.0f;
+    // float m_currentAlphaDecay = 0.0f;
     float m_alphaKConst;
     float m_alphaDecayRate; // alpha per seconds
 
@@ -35,7 +39,7 @@ class Particle {
 
 public:
     Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirection, float velocityMagnitude, float velDecayRate,
-             sf::Color startColor, float alphaDecayRate, float alphaKConst, float startSize,
+             sf::Color startColor, float alphaDecayRate, float alphaKConst, float startSize, float maxSize, float sizeKConst,
              float lifeTime,
              sf::Vector2f startAcceleration = sf::Vector2f(0.0f, 0.0f), float initialMaxRotationSpeed = 0.0f,
              float rotDecayRate = 0.0f,
