@@ -118,6 +118,12 @@ void SmokeMaker::spawnNewParticles(float dt) {
 
                 // 6. Steam Effect Configs
                 if (m_enabledFeatures[SimulationFeature::SteamEffect]) {
+                    particleAcceleration = m_steamEffectAccelerationVect;
+                    if (m_particleLifetime > 0) {
+                    }
+                }
+                else {
+                    // particleAcceleration = {0.0f, 0.0f};
                 }
 
 
@@ -283,8 +289,10 @@ void SmokeMaker::adjustRotationSpeedMultiplier(float delta) {
 }
 
 
-void SmokeMaker::adjustSteamEffectMultiplier(float delta) {
-    std::cout << "Constant k for smooth stop: " << std::endl;
+void SmokeMaker::adjustSteamEffectAccelerationVec(float delta) {
+    m_steamEffectAccelerationVect = {m_steamEffectAccelerationVect.x, m_steamEffectAccelerationVect.y + delta};
+    std::cout << "Steam Effect Vector: {" << m_steamEffectAccelerationVect.x << ", " << m_steamEffectAccelerationVect.y << "}" <<
+            std::endl;
 }
 
 
@@ -315,4 +323,8 @@ float SmokeMaker::getParticleRotKConst() const {
 
 float SmokeMaker::getRotationSpeedMultiplier() const {
     return m_rotationPerLifeTime;
+}
+
+sf::Vector2f SmokeMaker::getSteamEffectAccelerationVect() const {
+    return m_steamEffectAccelerationVect;
 }

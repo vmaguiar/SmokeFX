@@ -44,6 +44,7 @@ class SmokeMaker {
     float m_maxParticleSize = 600.0f;
     float m_rotKConst = config::PARTICLE_VEL_DECAY_CONST;
     float m_rotationPerLifeTime = config::ROTATION_PER_LIFETIME;
+    sf::Vector2f m_steamEffectAccelerationVect = {0.0f, -1500.0f};
 
 
     std::vector<Particle> m_particles;
@@ -97,7 +98,7 @@ public:
 
     void adjustRotationSpeedMultiplier(float delta);
 
-    static void adjustSteamEffectMultiplier(float delta);
+    void adjustSteamEffectAccelerationVec(float delta);
 
     float getParticleVelKConst() const;
 
@@ -110,4 +111,6 @@ public:
     float getParticleRotKConst() const;
 
     float getRotationSpeedMultiplier() const;
+
+    sf::Vector2f getSteamEffectAccelerationVect() const;
 };

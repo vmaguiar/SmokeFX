@@ -5,6 +5,9 @@
 /* to do:
  * - make a clickable option, bc of the number of buttons for the settings
  * - change the layout of the texts
+ * - set the spawn rate to adjustable
+ * - set particle lifetime to adjustable
+ * - set particle initial speed to adjustable
  */
 SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(game),
                                                                         m_window(window),
@@ -150,6 +153,16 @@ void SimulationState::handleEvent(const sf::Event &event) {
                 break;
 
             // Steam Effect Multiplier (U/J)
+            case sf::Keyboard::Scancode::U:
+                m_smokeMaker.adjustSteamEffectAccelerationVec(step);
+                break;
+            case sf::Keyboard::Scancode::J:
+                m_smokeMaker.adjustSteamEffectAccelerationVec(-step);
+                break;
+
+            // spawn rate adjustable (I/K)
+            // particle lifetime adjustable(O/L)
+            // particle initial speed adjustable(V/B)
 
             case sf::Keyboard::Scancode::Escape:
                 m_game.popState();
@@ -184,14 +197,14 @@ void SimulationState::updateFeatureStatusText() {
     // statusString += "5 - Texture: " + std::string(m_activeFeatures[SimulationFeature::Texture] ? "ON" : "OFF") + "\n";
     statusString += "6 - Steam Effect: " + std::string(m_activeFeatures[SimulationFeature::SteamEffect] ? "ON" : "OFF") + "\n";
 
-    statusString += "\n-- Tweaks (Q/A, W/S, E/D, R/F) --\n";
-    statusString += "Smooth Stop k: " + std::to_string(m_smokeMaker.getParticleVelKConst()) + "\n";
-    statusString += "Alpha Decay k: " + std::to_string(m_smokeMaker.getParticleAlphaKConst()) + "\n";
-    statusString += "Size Growth k: " + std::to_string(m_smokeMaker.getSizeKConst()) + "\n";
-    statusString += "Max Size Growth: " + std::to_string(m_smokeMaker.getMaxParticleSize()) + "\n";
-    statusString += "Rotation Speed k: " + std::to_string(m_smokeMaker.getParticleRotKConst()) + "\n";
-    statusString += "Rotation Speed: " + std::to_string(m_smokeMaker.getRotationSpeedMultiplier()) + "\n";
-    statusString += "Steam Accel M: \n";
+    statusString += "\n-- Tweaks (Q/A, W/S, E/D, R/F, ...) --\n";
+    statusString += "(Q/A) Smooth Stop k: " + std::to_string(m_smokeMaker.getParticleVelKConst()) + "\n";
+    statusString += "(W/S) Alpha Decay k: " + std::to_string(m_smokeMaker.getParticleAlphaKConst()) + "\n";
+    statusString += "(E/D) Size Growth k: " + std::to_string(m_smokeMaker.getSizeKConst()) + "\n";
+    statusString += "(R/F) Max Size Growth: " + std::to_string(m_smokeMaker.getMaxParticleSize()) + "\n";
+    statusString += "(T/G) Rotation Speed k: " + std::to_string(m_smokeMaker.getParticleRotKConst()) + "\n";
+    statusString += "(Y/H) Rotation Speed: " + std::to_string(m_smokeMaker.getRotationSpeedMultiplier()) + "\n";
+    statusString += "(U/J) Steam Accel M: " + std::to_string(m_smokeMaker.getSteamEffectAccelerationVect().y) + "\n";
 
     statusString += "\nLeft Mouse: ON/OFF emissor\n";
     statusString += "ESC: Exit";
