@@ -41,7 +41,7 @@ class SmokeMaker {
     float m_velKConst = config::PARTICLE_VEL_DECAY_CONST;
     float m_alphaKConst = config::PARTICLE_VEL_DECAY_CONST;
     float m_sizeKConst = config::PARTICLE_VEL_DECAY_CONST;
-    float m_maxParticleSize = 700.0f;
+    float m_maxParticleSize = 600.0f;
     float m_rotKConst = config::PARTICLE_VEL_DECAY_CONST;
     float m_rotationPerLifeTime = config::ROTATION_PER_LIFETIME;
 
@@ -104,6 +104,8 @@ public:
     float getParticleAlphaKConst() const;
 
     float getSizeKConst() const;
+
+    float getMaxParticleSize() const;
 
     float getParticleRotKConst() const;
 

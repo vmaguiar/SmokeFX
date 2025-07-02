@@ -243,6 +243,7 @@ sf::Vector2f SmokeMaker::getPosition() const {
     return m_position;
 }
 
+
 void SmokeMaker::adjustParticleVelKConst(float delta) {
     m_velKConst = m_velKConst + delta;
     if (m_velKConst < 0.0f) {
@@ -251,15 +252,18 @@ void SmokeMaker::adjustParticleVelKConst(float delta) {
     std::cout << "Constant k for smooth stop: " << m_velKConst << std::endl;
 }
 
+
 void SmokeMaker::adjustParticleAlphaKConst(float delta) {
     m_alphaKConst = m_alphaKConst + delta;
     std::cout << "Constant k for Decreasing Alpha: " << m_alphaKConst << std::endl;
 }
 
+
 void SmokeMaker::adjustParticleSizeKConst(float delta) {
     m_sizeKConst = m_sizeKConst + delta;
     std::cout << "Constant k for Increasing Size: " << std::endl;
 }
+
 
 void SmokeMaker::adjustParticleMaxSize(float delta) {
     m_maxParticleSize = m_maxParticleSize + delta;
@@ -272,10 +276,12 @@ void SmokeMaker::adjustParticleRotKConst(float delta) {
     std::cout << "Const k for Rotation speed decay: " << m_rotationPerLifeTime << std::endl;
 }
 
+
 void SmokeMaker::adjustRotationSpeedMultiplier(float delta) {
     m_rotationPerLifeTime = m_rotationPerLifeTime + (delta * 360.0f);
     std::cout << "lap multiplier: " << m_rotationPerLifeTime << std::endl;
 }
+
 
 void SmokeMaker::adjustSteamEffectMultiplier(float delta) {
     std::cout << "Constant k for smooth stop: " << std::endl;
@@ -286,12 +292,19 @@ float SmokeMaker::getParticleVelKConst() const {
     return m_velKConst;
 }
 
+
 float SmokeMaker::getParticleAlphaKConst() const {
     return m_alphaKConst;
 }
 
+
 float SmokeMaker::getSizeKConst() const {
     return m_sizeKConst;
+}
+
+
+float SmokeMaker::getMaxParticleSize() const {
+    return m_maxParticleSize;
 }
 
 

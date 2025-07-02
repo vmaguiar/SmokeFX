@@ -2,11 +2,10 @@
 #include <cmath>
 #include <iostream>
 /*to do:
- * - adjust the size constants (maybe they grow too quick and too much)
+ * - rotation can't be perfect turns every time (maybe with randomness it will solve)
  * - need some randomness into rotation
- * -
- * -
  * - maybe some randomness for the increasing size too
+ * - randomness to the direction of the particles will be necessary :S
  * - apply steam effect
  * - put some texture on
 */
