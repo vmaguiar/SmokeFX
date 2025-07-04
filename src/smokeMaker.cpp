@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <memory_resource>
 
 #include "configConsts.hpp"
 
@@ -9,19 +10,21 @@
 SmokeMaker::SmokeMaker(sf::Vector2f position, sf::Color mainColor, sf::Color outlineColor, int maxParticles,
                        float particleLifeTime, sf::Color particleColor,
                        float particleSize, sf::Vector2f initialDirection, float initialSpeed,
-                       float particlePerSecond): m_ONsmokeMakerShapePointer(sf::PrimitiveType::Triangles, 3),
-                                                 m_ONsmokeMakerShapePointerOutline(sf::PrimitiveType::Triangles, 3),
-                                                 m_position(position),
-                                                 m_mainColor(mainColor),
-                                                 m_outlineColor(outlineColor),
-                                                 m_maxParticles(maxParticles),
-                                                 m_particleLifetime(particleLifeTime),
-                                                 m_particleColor(particleColor),
-                                                 m_particleSize(particleSize),
-                                                 m_currentLaunchDirection(initialDirection),
-                                                 m_particleInitialSpeed(initialSpeed),
-                                                 m_particlesPerSecond(particlePerSecond),
-                                                 m_spawnAccumulator(0.0f) {
+                       float particlePerSecond,
+                       sf::Texture *particleTexturePtr): m_ONsmokeMakerShapePointer(sf::PrimitiveType::Triangles, 3),
+                                                         m_ONsmokeMakerShapePointerOutline(sf::PrimitiveType::Triangles, 3),
+                                                         m_position(position),
+                                                         m_mainColor(mainColor),
+                                                         m_outlineColor(outlineColor),
+                                                         m_maxParticles(maxParticles),
+                                                         m_particleLifetime(particleLifeTime),
+                                                         m_particleColor(particleColor),
+                                                         m_particleSize(particleSize),
+                                                         m_currentLaunchDirection(initialDirection),
+                                                         m_particleInitialSpeed(initialSpeed),
+                                                         m_particlesPerSecond(particlePerSecond),
+                                                         m_spawnAccumulator(0.0f),
+                                                         m_particleTexturePtr(particleTexturePtr) {
     // Off Shape
     m_OFFsmokeMakerShape.setRadius(config::EMITTER_RADIUS);
     m_OFFsmokeMakerShape.setFillColor(sf::Color(255, 128, 0)); // Orange
@@ -60,7 +63,9 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 float particleInitialRotationSpeed = 0.0f;
                 float particleScaleRate = 0.0f;
                 float particleInitialMaxAlphaDecaySpeed = 0.0f;
-                // float particleInitialMaxAlpha = 0.0f;
+                sf::Texture *textureParam = nullptr;
+
+
                 float velKParam = 0.0f;
                 float alphaKParam = 0.0f;
                 float sizeKParam = 0.0f;
@@ -113,7 +118,9 @@ void SmokeMaker::spawnNewParticles(float dt) {
 
 
                 // 5. Texture Configs
-                // W.I.P
+                if (m_enabledFeatures[SimulationFeature::Texture]) {
+                    textureParam = m_particleTexturePtr;
+                }
 
 
                 // 6. Steam Effect Configs
@@ -122,15 +129,12 @@ void SmokeMaker::spawnNewParticles(float dt) {
                     if (m_particleLifetime > 0) {
                     }
                 }
-                else {
-                    // particleAcceleration = {0.0f, 0.0f};
-                }
 
 
                 m_particles.emplace_back(m_position, m_currentLaunchDirection, m_particleInitialSpeed, velKParam,
                                          m_particleColor, particleInitialMaxAlphaDecaySpeed, alphaKParam,
                                          m_particleSize, m_maxParticleSize, sizeKParam,
-                                         m_particleLifetime,
+                                         m_particleLifetime, textureParam,
                                          particleAcceleration, particleInitialRotationSpeed, m_rotKConst, particleScaleRate);
             }
         }

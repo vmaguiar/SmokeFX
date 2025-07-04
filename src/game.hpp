@@ -6,10 +6,11 @@
 class Game {
     sf::RenderWindow m_window;
     sf::Font m_font;
+    sf::Texture m_smokeTexture;
     std::stack<std::unique_ptr<GameState> > m_statesStack;
 
 public:
-    Game(const sf::Font &font);
+    explicit Game(sf::Font &font, sf::Texture &texture);
 
     ~Game();
 
@@ -23,5 +24,7 @@ public:
 
     sf::RenderWindow &getWindow();
 
-    sf::Font getFont();
+    sf::Font &getFont();
+
+    sf::Texture &getSmokeTexture();
 };

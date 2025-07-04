@@ -2,6 +2,7 @@
 #include "SFML/Graphics/RectangleShape.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/System/Vector2.hpp"
+#include <SFML/Graphics.hpp>
 
 class Particle {
     sf::RectangleShape m_shape;
@@ -33,6 +34,10 @@ class Particle {
     float m_alphaKConst;
     float m_alphaDecayRate; // alpha per seconds
 
+    sf::Texture *m_texturePtr;
+    // sf::Sprite *m_smokeSpritePtr;
+    std::unique_ptr<sf::Sprite> m_smokeSpritePtr;
+
     std::chrono::high_resolution_clock::time_point m_spawnTime;
     float m_lifetime; // total in seconds
     float m_totalElapsedTime;
@@ -40,10 +45,9 @@ class Particle {
 public:
     Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirection, float velocityMagnitude, float velDecayRate,
              sf::Color startColor, float alphaDecayRate, float alphaKConst, float startSize, float maxSize, float sizeKConst,
-             float lifeTime,
+             float lifeTime, sf::Texture *smokeTexturePtr,
              sf::Vector2f startAcceleration = sf::Vector2f(0.0f, 0.0f), float initialMaxRotationSpeed = 0.0f,
-             float rotDecayRate = 0.0f,
-             float scaleRate = 0.0f);
+             float rotDecayRate = 0.0f, float scaleRate = 0.0f);
 
     void update(float dt);
 

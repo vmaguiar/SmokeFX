@@ -36,6 +36,7 @@ class SmokeMaker {
     float m_particleInitialSpeed;
     float m_particlesPerSecond;
     float m_spawnAccumulator;
+    sf::Texture *m_particleTexturePtr;
 
     // config var
     float m_velKConst = config::PARTICLE_VEL_DECAY_CONST;
@@ -66,7 +67,7 @@ class SmokeMaker {
 public:
     SmokeMaker(sf::Vector2f position, sf::Color mainColor, sf::Color outlineColor, int maxParticles, float particleLifeTime,
                sf::Color particleColor, float particleSize,
-               sf::Vector2f initialDirection, float initialSpeed, float particlePerSecond);
+               sf::Vector2f initialDirection, float initialSpeed, float particlePerSecond, sf::Texture *particleTexturePtr);
 
     // methods SimulationState will call
     void update(float dt);

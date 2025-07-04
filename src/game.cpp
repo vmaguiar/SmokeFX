@@ -1,8 +1,7 @@
 #include "game.hpp"
 #include "configConsts.hpp"
-// Incluir os estados posteriormente
 
-Game::Game(const sf::Font &font): m_font(font) {
+Game::Game(sf::Font &font, sf::Texture &smokeTexture): m_font(font), m_smokeTexture(smokeTexture) {
     sf::ContextSettings settings;
     settings.antiAliasingLevel = 8;
     m_window.create(sf::VideoMode(config::WINDOW_SIZE), "SmokeFX", sf::State::Windowed, settings);
@@ -61,7 +60,7 @@ void Game::run() {
 
 void Game::pushState(std::unique_ptr<GameState> state) {
     if (!m_statesStack.empty()) {
-        // Se o estado atual precisar de uma pausa, implemente aqui
+        // implement here if state need a pause
         // m_states.top()->pause();
     }
     m_statesStack.push(std::move(state));
@@ -82,6 +81,10 @@ sf::RenderWindow &Game::getWindow() {
     return m_window;
 }
 
-sf::Font Game::getFont() {
+sf::Font &Game::getFont() {
     return m_font;
+}
+
+sf::Texture &Game::getSmokeTexture() {
+    return m_smokeTexture;
 }

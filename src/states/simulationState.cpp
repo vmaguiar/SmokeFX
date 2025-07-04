@@ -19,7 +19,8 @@ SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(g
                                                                             sf::Color::White, config::PARTICLE_SIZE,
                                                                             sf::Vector2f({1.0f, 0.0f}),
                                                                             config::PARTICLE_INIT_SPEED,
-                                                                            config::PARTICLE_SPAWN_RATE),
+                                                                            config::PARTICLE_SPAWN_RATE,
+                                                                            &m_game.getSmokeTexture()),
                                                                         m_font(m_game.getFont()),
                                                                         m_featureStatusText(m_font, "texto inicial", 18),
                                                                         m_isSmokeMakerActive(false) {
@@ -93,10 +94,10 @@ void SimulationState::handleEvent(const sf::Event &event) {
                 break;
 
             // Texture
-            // case sf::Keyboard::Scancode::Num5:
-            //     m_activeFeatures[SimulationFeature::Texture] = !m_activeFeatures[SimulationFeature::Texture];
-            //     std::cout << "Texture: " << (m_activeFeatures[SimulationFeature::Texture] ? "ON" : "OFF") << std::endl;
-            //     break;
+            case sf::Keyboard::Scancode::Num5:
+                m_activeFeatures[SimulationFeature::Texture] = !m_activeFeatures[SimulationFeature::Texture];
+                std::cout << "Texture: " << (m_activeFeatures[SimulationFeature::Texture] ? "ON" : "OFF") << std::endl;
+                break;
 
             // Steam Effect
             case sf::Keyboard::Scancode::Num6:
@@ -194,7 +195,7 @@ void SimulationState::updateFeatureStatusText() {
     statusString += "3 - Increasing Size: " + std::string(m_activeFeatures[SimulationFeature::IncreasingSize] ? "ON" : "OFF") +
             "\n";
     statusString += "4 - Rotation: " + std::string(m_activeFeatures[SimulationFeature::Rotation] ? "ON" : "OFF") + "\n";
-    // statusString += "5 - Texture: " + std::string(m_activeFeatures[SimulationFeature::Texture] ? "ON" : "OFF") + "\n";
+    statusString += "5 - Texture: " + std::string(m_activeFeatures[SimulationFeature::Texture] ? "ON" : "OFF") + "\n";
     statusString += "6 - Steam Effect: " + std::string(m_activeFeatures[SimulationFeature::SteamEffect] ? "ON" : "OFF") + "\n";
 
     statusString += "\n-- Tweaks (Q/A, W/S, E/D, R/F, ...) --\n";

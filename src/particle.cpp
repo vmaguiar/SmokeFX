@@ -6,11 +6,10 @@
  * - need some randomness into rotation
  * - maybe some randomness for the increasing size too
  * - randomness to the direction of the particles will be necessary :S
- * - put some texture on
 */
 Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirection, float velocityMagnitude, float velDecayRate,
                    sf::Color startColor, float alphaDecayRate, float alphaKConst,
-                   float startSize, float maxSize, float sizeKConst, float lifeTime,
+                   float startSize, float maxSize, float sizeKConst, float lifeTime, sf::Texture *smokeTexturePtr,
                    sf::Vector2f startAcceleration, float initialMaxRotationSpeed, float rotDecayRate,
                    float scaleRate): m_velocityDirection(startVelocityDirection),
                                      m_initialMaxVelocityMagnitude(velocityMagnitude),
@@ -28,6 +27,7 @@ Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirecti
                                      m_currentAlpha(static_cast<float>(startColor.a)),
                                      m_alphaKConst(alphaKConst),
                                      m_alphaDecayRate(alphaDecayRate),
+                                     m_texturePtr(smokeTexturePtr),
                                      m_spawnTime(std::chrono::high_resolution_clock::now()),
                                      m_lifetime(lifeTime),
                                      m_totalElapsedTime(0.0f) {
@@ -37,6 +37,20 @@ Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirecti
     m_shape.setPosition(startPosition);
 
     m_currentVelocity = m_velocityDirection * m_initialMaxVelocityMagnitude;
+
+    if (m_texturePtr) {
+        m_smokeSpritePtr = std::make_unique<sf::Sprite>(*m_texturePtr);
+        m_smokeSpritePtr->setOrigin({
+            static_cast<float>(m_smokeSpritePtr->getTexture().getSize().x) / 2.0f,
+            static_cast<float>(m_smokeSpritePtr->getTexture().getSize().y) / 2.0f
+        });
+        m_smokeSpritePtr->setScale({
+            m_initialSize / static_cast<float>(m_smokeSpritePtr->getTexture().getSize().x),
+            m_initialSize / static_cast<float>(m_smokeSpritePtr->getTexture().getSize().y)
+        });
+        m_smokeSpritePtr->setColor(m_initialColor);
+        m_smokeSpritePtr->setPosition(startPosition);
+    }
 }
 
 void Particle::update(float dt) {
@@ -105,12 +119,47 @@ void Particle::update(float dt) {
         }
         m_shape.setRotation(sf::degrees(m_currentRotation));
     }
+
+
+    // 5. Apply Texture
+    if (m_smokeSpritePtr) {
+        // acceleration
+        m_smokeSpritePtr->move(dt * m_currentVelocity);
+
+        // alpha
+        sf::Color currentColor = m_shape.getFillColor();
+        currentColor.a = static_cast<uint8_t>(m_currentAlpha);
+        m_smokeSpritePtr->setColor(currentColor);
+
+        // size
+        m_smokeSpritePtr->setScale({
+            m_currentSize / static_cast<float>(m_smokeSpritePtr->getTexture().getSize().x),
+            m_currentSize / static_cast<float>(m_smokeSpritePtr->getTexture().getSize().y)
+        });
+        m_smokeSpritePtr->setOrigin({
+            static_cast<float>(m_smokeSpritePtr->getTexture().getSize().x) / 2.0f,
+            static_cast<float>(m_smokeSpritePtr->getTexture().getSize().y) / 2.0f
+        });
+
+        // rotation
+        m_smokeSpritePtr->setRotation(sf::degrees(m_currentRotation));
+    }
 }
 
 
 void Particle::draw(sf::RenderWindow &window) const {
-    if (m_shape.getFillColor().a > 0) {
-        window.draw(m_shape);
+    if (isDead()) {
+        return;
+    }
+    if (m_smokeSpritePtr) {
+        if (m_smokeSpritePtr->getColor().a > 0) {
+            window.draw(*m_smokeSpritePtr);
+        }
+    }
+    else {
+        if (m_shape.getFillColor().a > 0) {
+            window.draw(m_shape);
+        }
     }
 }
 
