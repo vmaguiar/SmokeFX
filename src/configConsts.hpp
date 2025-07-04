@@ -18,10 +18,15 @@ namespace config {
     // particle
     constexpr float PARTICLE_LIFETIME = 20.0f;
     constexpr float PARTICLE_INIT_SPEED = 300.0f;
-    constexpr float PARTICLE_SPAWN_RATE = 10.0f; // particle per seconds
+    constexpr float PARTICLE_SPAWN_RATE = 20.0f; // particle per seconds
     constexpr float PARTICLE_SPAWN_TIME = 1.0f / PARTICLE_SPAWN_RATE; // 0.05...
     constexpr float PARTICLE_SIZE = 40.0f;
+    constexpr float PARTICLE_MAX_SIZE = 650.0f;
     //
-    constexpr float PARTICLE_VEL_DECAY_CONST = 0.2f;
-    constexpr float ROTATION_PER_LIFETIME = 1080.0f; //3 * 360
+    constexpr float PARTICLE_VEL_K_CONST = 0.2f;
+    constexpr float PARTICLE_ALPHA_K_CONST = 0.3f;
+    constexpr float PARTICLE_SIZE_K_CONST = 0.2f;
+    constexpr float PARTICLE_ROT_K_CONST = 0.3f;
+    constexpr float TOTAL_ROTATIONS = 1080.0f; //3 * 360
+    constexpr sf::Vector2f STEAM_EFFECT_VECTOR = {0.0f, -2250.0f};
 }

@@ -39,13 +39,13 @@ class SmokeMaker {
     sf::Texture *m_particleTexturePtr;
 
     // config var
-    float m_velKConst = config::PARTICLE_VEL_DECAY_CONST;
-    float m_alphaKConst = config::PARTICLE_VEL_DECAY_CONST;
-    float m_sizeKConst = config::PARTICLE_VEL_DECAY_CONST;
-    float m_maxParticleSize = 600.0f;
-    float m_rotKConst = config::PARTICLE_VEL_DECAY_CONST;
-    float m_rotationPerLifeTime = config::ROTATION_PER_LIFETIME;
-    sf::Vector2f m_steamEffectAccelerationVect = {0.0f, -1500.0f};
+    float m_velKConst = config::PARTICLE_VEL_K_CONST;
+    float m_alphaKConst = config::PARTICLE_ALPHA_K_CONST;
+    float m_sizeKConst = config::PARTICLE_SIZE_K_CONST;
+    float m_maxParticleSize = config::PARTICLE_MAX_SIZE;
+    float m_rotKConst = config::PARTICLE_ROT_K_CONST;
+    float m_totalRotations = config::TOTAL_ROTATIONS;
+    sf::Vector2f m_steamEffectAccelerationVect = config::STEAM_EFFECT_VECTOR;
 
 
     std::vector<Particle> m_particles;

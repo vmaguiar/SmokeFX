@@ -2,9 +2,9 @@
 #include <cmath>
 #include <iostream>
 /*to do:
- * - rotation can't be perfect turns every time (maybe with randomness it will solve)
- * - need some randomness into rotation
- * - maybe some randomness for the increasing size too
+ * -
+ * -
+ * -
  * - randomness to the direction of the particles will be necessary :S
 */
 Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirection, float velocityMagnitude, float velDecayRate,

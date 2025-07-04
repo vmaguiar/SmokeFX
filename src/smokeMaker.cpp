@@ -5,6 +5,7 @@
 #include <memory_resource>
 
 #include "configConsts.hpp"
+#include "utils/randomNumGenerator.hpp"
 
 
 SmokeMaker::SmokeMaker(sf::Vector2f position, sf::Color mainColor, sf::Color outlineColor, int maxParticles,
@@ -60,6 +61,7 @@ void SmokeMaker::spawnNewParticles(float dt) {
 
                 // Basics Particle proprieties
                 sf::Vector2f particleAcceleration = {0.0f, 0.0f};
+                // float particleMaxSize = m_maxParticleSize;
                 float particleInitialRotationSpeed = 0.0f;
                 float particleScaleRate = 0.0f;
                 float particleInitialMaxAlphaDecaySpeed = 0.0f;
@@ -100,19 +102,25 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 // 3. Increasing Size Configs
                 if (m_enabledFeatures[SimulationFeature::IncreasingSize]) {
                     if (m_particleLifetime > 0) {
-                        particleScaleRate = m_maxParticleSize / m_particleLifetime;
+                        std::cout << m_maxParticleSize << std::endl;
+                        float maxSizeRandomOffset = RandomNumberGenerator::getFloat(
+                            -(m_maxParticleSize * 0.2f), m_maxParticleSize * 0.1f);
+                        float particleMaxSize = m_maxParticleSize + maxSizeRandomOffset;
+                        std::cout << particleMaxSize << std::endl;
+                        particleScaleRate = particleMaxSize / m_particleLifetime;
                         sizeKParam = m_sizeKConst;
                     }
-                }
-                else {
-                    sizeKParam = 0.0f;
                 }
 
 
                 // 4. Rotation Configs
                 if (m_enabledFeatures[SimulationFeature::Rotation]) {
                     if (m_particleLifetime > 0) {
-                        particleInitialRotationSpeed = m_rotationPerLifeTime / m_particleLifetime;
+                        float rotPerSecond = m_totalRotations / m_particleLifetime;
+                        float randomRotSpeedOffset = RandomNumberGenerator::getFloat(0, (rotPerSecond * 0.5f));
+                        particleInitialRotationSpeed = rotPerSecond + randomRotSpeedOffset;
+                        int rotationDirection = RandomNumberGenerator::getDirection();
+                        particleInitialRotationSpeed = particleInitialRotationSpeed * static_cast<float>(rotationDirection);
                     }
                 }
 
@@ -283,13 +291,13 @@ void SmokeMaker::adjustParticleMaxSize(float delta) {
 
 void SmokeMaker::adjustParticleRotKConst(float delta) {
     m_rotKConst = m_rotKConst + delta;
-    std::cout << "Const k for Rotation speed decay: " << m_rotationPerLifeTime << std::endl;
+    std::cout << "Const k for Rotation speed decay: " << m_totalRotations << std::endl;
 }
 
 
 void SmokeMaker::adjustRotationSpeedMultiplier(float delta) {
-    m_rotationPerLifeTime = m_rotationPerLifeTime + (delta * 360.0f);
-    std::cout << "lap multiplier: " << m_rotationPerLifeTime << std::endl;
+    m_totalRotations = m_totalRotations + (delta * 360.0f);
+    std::cout << "lap multiplier: " << m_totalRotations << std::endl;
 }
 
 
@@ -326,7 +334,7 @@ float SmokeMaker::getParticleRotKConst() const {
 
 
 float SmokeMaker::getRotationSpeedMultiplier() const {
-    return m_rotationPerLifeTime;
+    return m_totalRotations;
 }
 
 sf::Vector2f SmokeMaker::getSteamEffectAccelerationVect() const {
