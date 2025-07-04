@@ -14,7 +14,7 @@ SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(g
                                                                         m_smokeMaker(
                                                                             config::EMITTER_START_POSITION,
                                                                             config::EMITTER_MAIN_COLOR,
-                                                                            config::EMITTER_OUTILINE_COLOR,
+                                                                            config::EMITTER_OUTLINE_COLOR,
                                                                             config::MAX_PARTICLES, config::PARTICLE_LIFETIME,
                                                                             sf::Color::White, config::PARTICLE_SIZE,
                                                                             sf::Vector2f({1.0f, 0.0f}),
@@ -22,7 +22,7 @@ SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(g
                                                                             config::PARTICLE_SPAWN_RATE,
                                                                             &m_game.getSmokeTexture()),
                                                                         m_font(m_game.getFont()),
-                                                                        m_featureStatusText(m_font, "texto inicial", 18),
+                                                                        m_featureStatusText(m_font, "initial Text", 18),
                                                                         m_isSmokeMakerActive(false) {
     m_activeFeatures[SimulationFeature::ConstantSpeed] = true;
     m_activeFeatures[SimulationFeature::SmoothStop] = false;
@@ -58,12 +58,12 @@ void SimulationState::handleEvent(const sf::Event &event) {
     else if (const auto *keyPressed = event.getIf<sf::Event::KeyPressed>()) {
         float step = 0.1f;
         if (keyPressed->scancode == sf::Keyboard::Scancode::LShift || keyPressed->scancode == sf::Keyboard::Scancode::RShift) {
-            // nao ta entrando aqui
+            // don't get here
             step = 0.01f;
         }
         else if (keyPressed->scancode == sf::Keyboard::Scancode::LControl || keyPressed->scancode ==
                  sf::Keyboard::Scancode::RControl) {
-            // aqui tambem nao
+            // here either
             step = 1.0f;
         }
         switch (keyPressed->scancode) {

@@ -13,7 +13,7 @@ namespace config {
     constexpr float EMITTER_RADIUS = 10.0f;
     constexpr sf::Vector2f EMITTER_START_POSITION = sf::Vector2f(50.0f, WINDOW_SIZE_F.y * 0.5f);
     constexpr sf::Color EMITTER_MAIN_COLOR = sf::Color(255, 128, 0);
-    constexpr sf::Color EMITTER_OUTILINE_COLOR = sf::Color(192, 192, 192);
+    constexpr sf::Color EMITTER_OUTLINE_COLOR = sf::Color(192, 192, 192);
     constexpr int MAX_PARTICLES = 2000;
     // particle
     constexpr float PARTICLE_LIFETIME = 20.0f;

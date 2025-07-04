@@ -5,11 +5,11 @@
 int main() {
     sf::Font gameFont;
     if (!gameFont.openFromFile("assets/fonts/Roboto-Italic.ttf")) {
-        std::cerr << "Erro ao carregar fonte para o MenuState!" << std::endl;
+        std::cerr << "Error to load the Game font!" << std::endl;
     }
     sf::Texture smokeTexture;
     if (!smokeTexture.loadFromFile("assets/smoke.png")) {
-        std::cerr << "Erro ao carregar Smoke.png!" << std::endl;
+        std::cerr << "Error to load Smoke.png texture!" << std::endl;
     }
 
     Game game(gameFont, smokeTexture);
