@@ -1,12 +1,7 @@
 #include "particle.hpp"
 #include <cmath>
 #include <iostream>
-/*to do:
- * -
- * -
- * -
- * - randomness to the direction of the particles will be necessary :S
-*/
+
 Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirection, float velocityMagnitude, float velDecayRate,
                    sf::Color startColor, float alphaDecayRate, float alphaKConst,
                    float startSize, float maxSize, float sizeKConst, float lifeTime, sf::Texture *smokeTexturePtr,
@@ -66,9 +61,8 @@ void Particle::update(float dt) {
     float currentSpeedMagnitude = m_initialMaxVelocityMagnitude * std::exp(-m_velDecayRate * m_totalElapsedTime);
     m_currentVelocity = m_velocityDirection * currentSpeedMagnitude;
 
-    // If you have other accelerations (like gravity, steam effect) that are *additive*
+    // If we have other accelerations (like gravity, steam effect) that are *additive*
     // to the base exponential movement, apply them *after* calculating currentVelocity.
-    // For example: currentVelocity += m_acceleration * dt; // if m_acceleration is gravity
 
     // 6. Apply Steam Effect
     m_currentVelocity = m_currentVelocity + (m_acceleration * dt);

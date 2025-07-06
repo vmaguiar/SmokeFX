@@ -73,6 +73,43 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 float sizeKParam = 0.0f;
 
                 // here there may be a small random direction variation
+                // 10% variation on the direction of the particles
+                std::cout << "antes: " << m_currentLaunchDirection.x << ", " << m_currentLaunchDirection.y << std::endl;
+                float randomOffsetX = 0;
+                float randomOffsetY = 0;
+                if (m_currentLaunchDirection.x > -0.7f && m_currentLaunchDirection.x < 0.7f) {
+                    randomOffsetX = RandomNumberGenerator::getFloat(-(m_currentLaunchDirection.x * 0.2f),
+                                                                    m_currentLaunchDirection.x * 0.2f);
+                }
+
+                if (m_currentLaunchDirection.y > -0.7f && m_currentLaunchDirection.y < 0.7f) {
+                    randomOffsetY = RandomNumberGenerator::getFloat(-(m_currentLaunchDirection.y * 0.2f),
+                                                                    m_currentLaunchDirection.y * 0.2f);
+                }
+
+                if (randomOffsetX > -0.1f && randomOffsetX < 0.1f) {
+                    randomOffsetX = RandomNumberGenerator::getFloat(-0.02f, 0.02f);
+                }
+                if (randomOffsetY > -0.1f && randomOffsetY < 0.1f) {
+                    randomOffsetY = RandomNumberGenerator::getFloat(-0.02f, 0.02f);
+                }
+
+                sf::Vector2f launchDirectionRandomOffset = {
+                    m_currentLaunchDirection.x + randomOffsetX, m_currentLaunchDirection.y + randomOffsetY
+                };
+                if (launchDirectionRandomOffset.x < -1.0f) {
+                    launchDirectionRandomOffset.x = -1.0f;
+                }
+                else if (launchDirectionRandomOffset.x > 1.0f) {
+                    launchDirectionRandomOffset.x = 1.0f;
+                }
+                else if (launchDirectionRandomOffset.y < -1.0f) {
+                    launchDirectionRandomOffset.y = -1.0f;
+                }
+                else if (launchDirectionRandomOffset.y > 1.0f) {
+                    launchDirectionRandomOffset.y = 1.0f;
+                }
+                std::cout << "depois: " << launchDirectionRandomOffset.x << ", " << launchDirectionRandomOffset.y << std::endl;
 
 
                 // 1. Smooth Stop Configs
@@ -139,7 +176,7 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 }
 
 
-                m_particles.emplace_back(m_position, m_currentLaunchDirection, m_particleInitialSpeed, velKParam,
+                m_particles.emplace_back(m_position, launchDirectionRandomOffset, m_particleInitialSpeed, velKParam,
                                          m_particleColor, particleInitialMaxAlphaDecaySpeed, alphaKParam,
                                          m_particleSize, m_maxParticleSize, sizeKParam,
                                          m_particleLifetime, textureParam,
