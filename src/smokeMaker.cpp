@@ -5,6 +5,7 @@
 #include <memory_resource>
 
 #include "configConsts.hpp"
+#include "utils/randomNumGenerator.hpp"
 
 
 SmokeMaker::SmokeMaker(sf::Vector2f position, sf::Color mainColor, sf::Color outlineColor, int maxParticles,
@@ -60,17 +61,52 @@ void SmokeMaker::spawnNewParticles(float dt) {
 
                 // Basics Particle proprieties
                 sf::Vector2f particleAcceleration = {0.0f, 0.0f};
+                // float particleMaxSize = m_maxParticleSize;
                 float particleInitialRotationSpeed = 0.0f;
                 float particleScaleRate = 0.0f;
                 float particleInitialMaxAlphaDecaySpeed = 0.0f;
                 sf::Texture *textureParam = nullptr;
 
-
                 float velKParam = 0.0f;
                 float alphaKParam = 0.0f;
                 float sizeKParam = 0.0f;
 
-                // here there may be a small random direction variation
+
+                // 20% variation on the direction of the particles
+                float randomOffsetX = 0;
+                float randomOffsetY = 0;
+                if (m_currentLaunchDirection.x > -0.7f && m_currentLaunchDirection.x < 0.7f) {
+                    randomOffsetX = RandomNumberGenerator::getFloat(-(m_currentLaunchDirection.x * 0.2f),
+                                                                    m_currentLaunchDirection.x * 0.2f);
+                }
+
+                if (m_currentLaunchDirection.y > -0.7f && m_currentLaunchDirection.y < 0.7f) {
+                    randomOffsetY = RandomNumberGenerator::getFloat(-(m_currentLaunchDirection.y * 0.2f),
+                                                                    m_currentLaunchDirection.y * 0.2f);
+                }
+
+                if (randomOffsetX > -0.1f && randomOffsetX < 0.1f) {
+                    randomOffsetX = RandomNumberGenerator::getFloat(-0.02f, 0.02f);
+                }
+                if (randomOffsetY > -0.1f && randomOffsetY < 0.1f) {
+                    randomOffsetY = RandomNumberGenerator::getFloat(-0.02f, 0.02f);
+                }
+
+                sf::Vector2f launchDirectionRandomOffset = {
+                    m_currentLaunchDirection.x + randomOffsetX, m_currentLaunchDirection.y + randomOffsetY
+                };
+                if (launchDirectionRandomOffset.x < -1.0f) {
+                    launchDirectionRandomOffset.x = -1.0f;
+                }
+                else if (launchDirectionRandomOffset.x > 1.0f) {
+                    launchDirectionRandomOffset.x = 1.0f;
+                }
+                else if (launchDirectionRandomOffset.y < -1.0f) {
+                    launchDirectionRandomOffset.y = -1.0f;
+                }
+                else if (launchDirectionRandomOffset.y > 1.0f) {
+                    launchDirectionRandomOffset.y = 1.0f;
+                }
 
 
                 // 1. Smooth Stop Configs
@@ -78,9 +114,6 @@ void SmokeMaker::spawnNewParticles(float dt) {
                     if (m_particleLifetime > 0) {
                         velKParam = m_velKConst;
                     }
-                }
-                else {
-                    velKParam = 0.0f;
                 }
 
 
@@ -92,27 +125,28 @@ void SmokeMaker::spawnNewParticles(float dt) {
                         alphaKParam = m_alphaKConst;
                     }
                 }
-                else {
-                    alphaKParam = 0.0f;
-                }
 
 
                 // 3. Increasing Size Configs
                 if (m_enabledFeatures[SimulationFeature::IncreasingSize]) {
                     if (m_particleLifetime > 0) {
-                        particleScaleRate = m_maxParticleSize / m_particleLifetime;
+                        float maxSizeRandomOffset = RandomNumberGenerator::getFloat(
+                            -(m_maxParticleSize * 0.2f), m_maxParticleSize * 0.1f);
+                        float particleMaxSize = m_maxParticleSize + maxSizeRandomOffset;
+                        particleScaleRate = particleMaxSize / m_particleLifetime;
                         sizeKParam = m_sizeKConst;
                     }
-                }
-                else {
-                    sizeKParam = 0.0f;
                 }
 
 
                 // 4. Rotation Configs
                 if (m_enabledFeatures[SimulationFeature::Rotation]) {
                     if (m_particleLifetime > 0) {
-                        particleInitialRotationSpeed = m_rotationPerLifeTime / m_particleLifetime;
+                        float rotPerSecond = m_totalRotations / m_particleLifetime;
+                        float randomRotSpeedOffset = RandomNumberGenerator::getFloat(0, (rotPerSecond * 0.5f));
+                        particleInitialRotationSpeed = rotPerSecond + randomRotSpeedOffset;
+                        int rotationDirection = RandomNumberGenerator::getDirection();
+                        particleInitialRotationSpeed = particleInitialRotationSpeed * static_cast<float>(rotationDirection);
                     }
                 }
 
@@ -131,7 +165,7 @@ void SmokeMaker::spawnNewParticles(float dt) {
                 }
 
 
-                m_particles.emplace_back(m_position, m_currentLaunchDirection, m_particleInitialSpeed, velKParam,
+                m_particles.emplace_back(m_position, launchDirectionRandomOffset, m_particleInitialSpeed, velKParam,
                                          m_particleColor, particleInitialMaxAlphaDecaySpeed, alphaKParam,
                                          m_particleSize, m_maxParticleSize, sizeKParam,
                                          m_particleLifetime, textureParam,
@@ -259,44 +293,44 @@ void SmokeMaker::adjustParticleVelKConst(float delta) {
     if (m_velKConst < 0.0f) {
         m_velKConst = 0.0f;
     }
-    std::cout << "Constant k for smooth stop: " << m_velKConst << std::endl;
+    // std::cout << "Constant k for smooth stop: " << m_velKConst << std::endl;
 }
 
 
 void SmokeMaker::adjustParticleAlphaKConst(float delta) {
     m_alphaKConst = m_alphaKConst + delta;
-    std::cout << "Constant k for Decreasing Alpha: " << m_alphaKConst << std::endl;
+    // std::cout << "Constant k for Decreasing Alpha: " << m_alphaKConst << std::endl;
 }
 
 
 void SmokeMaker::adjustParticleSizeKConst(float delta) {
     m_sizeKConst = m_sizeKConst + delta;
-    std::cout << "Constant k for Increasing Size: " << std::endl;
+    // std::cout << "Constant k for Increasing Size: " << std::endl;
 }
 
 
 void SmokeMaker::adjustParticleMaxSize(float delta) {
     m_maxParticleSize = m_maxParticleSize + delta;
-    std::cout << "Max particle Size for Increasing Size: " << std::endl;
+    // std::cout << "Max particle Size for Increasing Size: " << std::endl;
 }
 
 
 void SmokeMaker::adjustParticleRotKConst(float delta) {
     m_rotKConst = m_rotKConst + delta;
-    std::cout << "Const k for Rotation speed decay: " << m_rotationPerLifeTime << std::endl;
+    // std::cout << "Const k for Rotation speed decay: " << m_totalRotations << std::endl;
 }
 
 
 void SmokeMaker::adjustRotationSpeedMultiplier(float delta) {
-    m_rotationPerLifeTime = m_rotationPerLifeTime + (delta * 360.0f);
-    std::cout << "lap multiplier: " << m_rotationPerLifeTime << std::endl;
+    m_totalRotations = m_totalRotations + (delta * 360.0f);
+    // std::cout << "lap multiplier: " << m_totalRotations << std::endl;
 }
 
 
 void SmokeMaker::adjustSteamEffectAccelerationVec(float delta) {
     m_steamEffectAccelerationVect = {m_steamEffectAccelerationVect.x, m_steamEffectAccelerationVect.y + delta};
-    std::cout << "Steam Effect Vector: {" << m_steamEffectAccelerationVect.x << ", " << m_steamEffectAccelerationVect.y << "}" <<
-            std::endl;
+    // std::cout << "Steam Effect Vector: {" << m_steamEffectAccelerationVect.x << ", " << m_steamEffectAccelerationVect.y << "}" <<
+    //         std::endl;
 }
 
 
@@ -326,7 +360,7 @@ float SmokeMaker::getParticleRotKConst() const {
 
 
 float SmokeMaker::getRotationSpeedMultiplier() const {
-    return m_rotationPerLifeTime;
+    return m_totalRotations;
 }
 
 sf::Vector2f SmokeMaker::getSteamEffectAccelerationVect() const {

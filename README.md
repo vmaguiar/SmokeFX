@@ -13,7 +13,9 @@ stages of simulation complexity, providing granular control over particle behavi
 
 ## 📸 Screenshots / GIFs
 
-W.I.P
+![SmokeFX intro GIF](https://github.com/vmaguiar/SmokeFX/blob/develop/assets/gifs/smokeFX_intro_gif.gif?raw=true)
+
+![SmokeFX Demo GIF](https://github.com/vmaguiar/SmokeFX/blob/develop/assets/gifs/smokeFX_demo_gif.gif?raw=true)
 
 ---
 
@@ -48,7 +50,7 @@ The project will utilize a state-based system to manage different screens of the
 
 * **MenuState:** The initial screen with options to start the simulation, access settings, and exit.
 * **ModularSimulationState:** The main simulation state where all the functionalities listed above can be activated/deactivated.
-* **OptionsState:** A state for adjusting global application settings (e.g., FPS limit, emitter size).
+* **OptionsState (W.I.P):** A state for adjusting global application settings (e.g., FPS limit, emitter size).
 
 ---
 
@@ -58,8 +60,8 @@ For users who want to run the simulation without compiling the code, a pre-compi
 
 1. **Download the Release:**
 
-* Go to the **[Releases]()** page of this repository.
-* Download the latest `.zip` file under "Assets".
+* Go to the **[Releases](https://github.com/vmaguiar/SmokeFX/releases)** page of this repository.
+* Download the latest `SmokeFX_v1.0.0.zip` file under "Assets".
 
 2. **Extract the Contents:**
 
@@ -121,3 +123,4 @@ You can run it directly:
 If you have any questions or suggestions, feel free to reach out:
 
 * **Vinicius Aguiar**: [GitHub Profile](https://github.com/vmaguiar)
+* **vmaguiar13@gmail.com**

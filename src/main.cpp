@@ -1,8 +1,11 @@
 #include <iostream>
+#include"utils/randomNumGenerator.hpp"
 #include "Game.hpp"
 #include "states/MenuState.hpp"
 
 int main() {
+    RandomNumberGenerator::init();
+
     sf::Font gameFont;
     if (!gameFont.openFromFile("assets/fonts/Roboto-Italic.ttf")) {
         std::cerr << "Error to load the Game font!" << std::endl;

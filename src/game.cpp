@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "configConsts.hpp"
+#include "version.hpp"
 
 Game::Game(sf::Font &font, sf::Texture &smokeTexture): m_font(font), m_smokeTexture(smokeTexture) {
     sf::ContextSettings settings;
@@ -54,6 +55,15 @@ void Game::run() {
         if (!m_statesStack.empty()) {
             m_statesStack.top()->draw(m_window);
         }
+        // version text drawing
+        const std::string versionString = "Version - " + SmokeFX::getVersionString();
+        sf::Text versionText = sf::Text(m_font, versionString, 15);
+        versionText.setPosition({
+            static_cast<float>(m_window.getSize().x) - versionText.getLocalBounds().size.x - 5.0f,
+            versionText.getLocalBounds().size.y
+        });
+        m_window.draw(versionText);
+
         m_window.display();
     }
 }

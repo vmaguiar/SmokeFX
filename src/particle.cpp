@@ -1,12 +1,7 @@
 #include "particle.hpp"
 #include <cmath>
 #include <iostream>
-/*to do:
- * - rotation can't be perfect turns every time (maybe with randomness it will solve)
- * - need some randomness into rotation
- * - maybe some randomness for the increasing size too
- * - randomness to the direction of the particles will be necessary :S
-*/
+
 Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirection, float velocityMagnitude, float velDecayRate,
                    sf::Color startColor, float alphaDecayRate, float alphaKConst,
                    float startSize, float maxSize, float sizeKConst, float lifeTime, sf::Texture *smokeTexturePtr,
@@ -66,9 +61,8 @@ void Particle::update(float dt) {
     float currentSpeedMagnitude = m_initialMaxVelocityMagnitude * std::exp(-m_velDecayRate * m_totalElapsedTime);
     m_currentVelocity = m_velocityDirection * currentSpeedMagnitude;
 
-    // If you have other accelerations (like gravity, steam effect) that are *additive*
+    // If we have other accelerations (like gravity, steam effect) that are *additive*
     // to the base exponential movement, apply them *after* calculating currentVelocity.
-    // For example: currentVelocity += m_acceleration * dt; // if m_acceleration is gravity
 
     // 6. Apply Steam Effect
     m_currentVelocity = m_currentVelocity + (m_acceleration * dt);
@@ -79,8 +73,6 @@ void Particle::update(float dt) {
     // 2. Apply decreasing alpha
     if (m_currentAlpha != 0.0f) {
         m_currentAlpha = m_initialMaxAlpha * std::exp(-m_alphaKConst * m_totalElapsedTime);
-        // m_currentAlpha = m_currentAlpha - (m_currentAlphaDecay * dt);
-        // m_currentAlpha -= m_alphaDecayRate * dt;
 
         m_currentAlpha = std::max(0.0f, m_currentAlpha);
         m_currentAlpha = std::min(255.0f, m_currentAlpha);
@@ -95,8 +87,6 @@ void Particle::update(float dt) {
     if (m_scaleRate != 0.0f) {
         float currentSizeGrowth = m_maxSize * (1.0f - std::exp(-m_sizeKConst * m_totalElapsedTime));
         m_currentSize = currentSizeGrowth;
-        // m_currentSize = m_currentSize + m_currentSize * (currentSizeGrowth * dt);
-        // m_currentSize += m_scaleRate * dt;
         m_currentSize = std::max(0.0f, m_currentSize);
 
         m_shape.setSize({m_currentSize, m_currentSize});
@@ -109,7 +99,6 @@ void Particle::update(float dt) {
         // Omega(t) = OmegaInitialMax * e^(-k*t)
         m_currentRotationSpeed = m_initialMaxRotationSpeed * std::exp(-m_rotDecayRate * m_totalElapsedTime);
         m_currentRotation = m_currentRotationSpeed;
-        // m_currentRotation = m_currentRotation + (m_currentRotationSpeed * dt);
 
         if (m_currentRotation >= 360.0f) {
             m_currentRotation -= 360.0f;
