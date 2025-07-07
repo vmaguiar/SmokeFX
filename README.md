@@ -123,3 +123,4 @@ You can run it directly:
 If you have any questions or suggestions, feel free to reach out:
 
 * **Vinicius Aguiar**: [GitHub Profile](https://github.com/vmaguiar)
+* **vmaguiar13@gmail.com**
