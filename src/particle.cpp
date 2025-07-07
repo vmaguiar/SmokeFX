@@ -73,8 +73,6 @@ void Particle::update(float dt) {
     // 2. Apply decreasing alpha
     if (m_currentAlpha != 0.0f) {
         m_currentAlpha = m_initialMaxAlpha * std::exp(-m_alphaKConst * m_totalElapsedTime);
-        // m_currentAlpha = m_currentAlpha - (m_currentAlphaDecay * dt);
-        // m_currentAlpha -= m_alphaDecayRate * dt;
 
         m_currentAlpha = std::max(0.0f, m_currentAlpha);
         m_currentAlpha = std::min(255.0f, m_currentAlpha);
@@ -89,8 +87,6 @@ void Particle::update(float dt) {
     if (m_scaleRate != 0.0f) {
         float currentSizeGrowth = m_maxSize * (1.0f - std::exp(-m_sizeKConst * m_totalElapsedTime));
         m_currentSize = currentSizeGrowth;
-        // m_currentSize = m_currentSize + m_currentSize * (currentSizeGrowth * dt);
-        // m_currentSize += m_scaleRate * dt;
         m_currentSize = std::max(0.0f, m_currentSize);
 
         m_shape.setSize({m_currentSize, m_currentSize});
@@ -103,7 +99,6 @@ void Particle::update(float dt) {
         // Omega(t) = OmegaInitialMax * e^(-k*t)
         m_currentRotationSpeed = m_initialMaxRotationSpeed * std::exp(-m_rotDecayRate * m_totalElapsedTime);
         m_currentRotation = m_currentRotationSpeed;
-        // m_currentRotation = m_currentRotation + (m_currentRotationSpeed * dt);
 
         if (m_currentRotation >= 360.0f) {
             m_currentRotation -= 360.0f;
