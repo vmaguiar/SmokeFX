@@ -70,7 +70,7 @@ void SimulationState::handleEvent(const sf::Event &event) {
             //Smooth Stop
             case sf::Keyboard::Scancode::Num1:
                 m_activeFeatures[SimulationFeature::SmoothStop] = !m_activeFeatures[SimulationFeature::SmoothStop];
-                std::cout << "Smooth Stop: " << (m_activeFeatures[SimulationFeature::SmoothStop] ? "ON" : "OFF") << std::endl;
+                // std::cout << "Smooth Stop: " << (m_activeFeatures[SimulationFeature::SmoothStop] ? "ON" : "OFF") << std::endl;
                 break;
 
             // Decreasing Alpha
@@ -83,26 +83,26 @@ void SimulationState::handleEvent(const sf::Event &event) {
             // Increasing Size
             case sf::Keyboard::Scancode::Num3:
                 m_activeFeatures[SimulationFeature::IncreasingSize] = !m_activeFeatures[SimulationFeature::IncreasingSize];
-                std::cout << "Increasing Size: " << (m_activeFeatures[SimulationFeature::IncreasingSize] ? "ON" : "OFF") <<
-                        std::endl;
+                // std::cout << "Increasing Size: " << (m_activeFeatures[SimulationFeature::IncreasingSize] ? "ON" : "OFF") <<
+                // std::endl;
                 break;
 
             // Rotation
             case sf::Keyboard::Scancode::Num4:
                 m_activeFeatures[SimulationFeature::Rotation] = !m_activeFeatures[SimulationFeature::Rotation];
-                std::cout << "Rotation: " << (m_activeFeatures[SimulationFeature::Rotation] ? "ON" : "OFF") << std::endl;
+                // std::cout << "Rotation: " << (m_activeFeatures[SimulationFeature::Rotation] ? "ON" : "OFF") << std::endl;
                 break;
 
             // Texture
             case sf::Keyboard::Scancode::Num5:
                 m_activeFeatures[SimulationFeature::Texture] = !m_activeFeatures[SimulationFeature::Texture];
-                std::cout << "Texture: " << (m_activeFeatures[SimulationFeature::Texture] ? "ON" : "OFF") << std::endl;
+                // std::cout << "Texture: " << (m_activeFeatures[SimulationFeature::Texture] ? "ON" : "OFF") << std::endl;
                 break;
 
             // Steam Effect
             case sf::Keyboard::Scancode::Num6:
                 m_activeFeatures[SimulationFeature::SteamEffect] = !m_activeFeatures[SimulationFeature::SteamEffect];
-                std::cout << "Steam Effect: " << (m_activeFeatures[SimulationFeature::SteamEffect] ? "ON" : "OFF") << std::endl;
+                // std::cout << "Steam Effect: " << (m_activeFeatures[SimulationFeature::SteamEffect] ? "ON" : "OFF") << std::endl;
                 break;
 
             // Velocity Decay Adjustment (Q/A)

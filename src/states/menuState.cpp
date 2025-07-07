@@ -6,7 +6,7 @@
 
 MenuState::MenuState(Game &game): m_game(game), m_selectedItemIndex(0) {
     if (!m_font.openFromFile("assets/fonts/Roboto-Italic.ttf")) {
-        std::cerr << "Erro ao carregar fonte para o MenuState!" << std::endl;
+        std::cerr << "Error load the font for MenuState!" << std::endl;
     }
 
     m_titleText.emplace(m_font, "SmokeFX Simulator", 80);

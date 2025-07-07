@@ -60,8 +60,8 @@ For users who want to run the simulation without compiling the code, a pre-compi
 
 1. **Download the Release:**
 
-* Go to the **[Releases]()** page of this repository.
-* Download the latest `.zip` file under "Assets".
+* Go to the **[Releases](https://github.com/vmaguiar/SmokeFX/releases)** page of this repository.
+* Download the latest `SmokeFX_v1.0.0.zip` file under "Assets".
 
 2. **Extract the Contents:**
 

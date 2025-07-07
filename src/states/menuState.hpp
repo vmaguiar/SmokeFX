@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../gameState.hpp"
-#include "../game.hpp"
 #include "SimulationState.hpp"
 #include <SFML/Graphics.hpp>
 

@@ -30,12 +30,10 @@ class Particle {
     sf::Color m_initialColor;
     float m_initialMaxAlpha = 255.0f;
     float m_currentAlpha; // (0-255) empty - full
-    // float m_currentAlphaDecay = 0.0f;
     float m_alphaKConst;
     float m_alphaDecayRate; // alpha per seconds
 
     sf::Texture *m_texturePtr;
-    // sf::Sprite *m_smokeSpritePtr;
     std::unique_ptr<sf::Sprite> m_smokeSpritePtr;
 
     std::chrono::high_resolution_clock::time_point m_spawnTime;
