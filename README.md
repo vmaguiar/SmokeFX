@@ -13,7 +13,9 @@ stages of simulation complexity, providing granular control over particle behavi
 
 ## 📸 Screenshots / GIFs
 
-W.I.P
+![SmokeFX intro GIF](https://github.com/vmaguiar/SmokeFX/blob/develop/res/smokeFX_intro_gif.gif?raw=true)
+
+![SmokeFX Demo GIF](https://github.com/vmaguiar/SmokeFX/blob/develop/res/smokeFX_demo_gif.gif?raw=true)
 
 ---
 
@@ -48,7 +50,7 @@ The project will utilize a state-based system to manage different screens of the
 
 * **MenuState:** The initial screen with options to start the simulation, access settings, and exit.
 * **ModularSimulationState:** The main simulation state where all the functionalities listed above can be activated/deactivated.
-* **OptionsState:** A state for adjusting global application settings (e.g., FPS limit, emitter size).
+* **OptionsState (W.I.P):** A state for adjusting global application settings (e.g., FPS limit, emitter size).
 
 ---
 
