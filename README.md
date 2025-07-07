@@ -13,9 +13,9 @@ stages of simulation complexity, providing granular control over particle behavi
 
 ## 📸 Screenshots / GIFs
 
-![SmokeFX intro GIF](https://github.com/vmaguiar/SmokeFX/blob/develop/res/smokeFX_intro_gif.gif?raw=true)
+![SmokeFX intro GIF](https://github.com/vmaguiar/SmokeFX/blob/develop/assets/gifs/smokeFX_intro_gif.gif?raw=true)
 
-![SmokeFX Demo GIF](https://github.com/vmaguiar/SmokeFX/blob/develop/res/smokeFX_demo_gif.gif?raw=true)
+![SmokeFX Demo GIF](https://github.com/vmaguiar/SmokeFX/blob/develop/assets/gifs/smokeFX_demo_gif.gif?raw=true)
 
 ---
 
