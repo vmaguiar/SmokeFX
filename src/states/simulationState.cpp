@@ -32,6 +32,33 @@ SimulationState::SimulationState(Game &game, sf::RenderWindow &window): m_game(g
     m_activeFeatures[SimulationFeature::Texture] = false;
     m_activeFeatures[SimulationFeature::SteamEffect] = false;
 
+    // Definir algumas paredes de teste (ex: uma caixa simples no meio)
+    // Parede superior
+    m_walls.emplace_back(sf::Vector2f(400.0f, 10.0f)); // Tamanho
+    m_walls.back().setPosition({1200.0f, 10.0f}); // Posição
+    m_walls.back().setFillColor(sf::Color::Blue);
+
+    // Parede inferior
+    m_walls.emplace_back(sf::Vector2f(400.0f, 10.0f));
+    m_walls.back().setPosition({1200.0f, 1000.0f});
+    m_walls.back().setFillColor(sf::Color::Blue);
+
+    // Parede esquerda
+    // m_walls.emplace_back(sf::Vector2f(10.0f, 200.0f));
+    // m_walls.back().setPosition({200.0f, 200.0f});
+    // m_walls.back().setFillColor(sf::Color::Blue);
+
+    // Parede direita
+    m_walls.emplace_back(sf::Vector2f(10.0f, 200.0f));
+    m_walls.back().setPosition({1200.0f, 200.0f});
+    m_walls.back().setFillColor(sf::Color::Blue);
+
+    for (const auto &wallShape: m_walls) {
+        m_wallsBounds.push_back(wallShape.getGlobalBounds());
+    }
+
+    m_smokeMaker.setWalls(m_wallsBounds);
+
     applyFeaturesToSmokeMaker();
     updateFeatureStatusText();
 }
@@ -76,8 +103,8 @@ void SimulationState::handleEvent(const sf::Event &event) {
             // Decreasing Alpha
             case sf::Keyboard::Scancode::Num2:
                 m_activeFeatures[SimulationFeature::DecreasingAlpha] = !m_activeFeatures[SimulationFeature::DecreasingAlpha];
-                std::cout << "Decreasing Alpha: " << (m_activeFeatures[SimulationFeature::DecreasingAlpha] ? "ON" : "OFF") <<
-                        std::endl;
+                // std::cout << "Decreasing Alpha: " << (m_activeFeatures[SimulationFeature::DecreasingAlpha] ? "ON" : "OFF") <<
+                //         std::endl;
                 break;
 
             // Increasing Size
@@ -183,6 +210,9 @@ void SimulationState::update(float dt) {
 
 void SimulationState::draw(sf::RenderWindow &window) {
     window.clear();
+    for (const auto &wallShape: m_walls) {
+        window.draw(wallShape);
+    }
     m_smokeMaker.draw(window);
     window.draw(m_featureStatusText);
 }

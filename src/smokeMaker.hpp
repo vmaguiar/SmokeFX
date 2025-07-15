@@ -51,6 +51,8 @@ class SmokeMaker {
     std::vector<Particle> m_particles;
     bool m_isActive = false;
 
+    const std::vector<sf::FloatRect> *m_wallsPtr = nullptr;
+
     std::map<SimulationFeature, bool> m_enabledFeatures;
 
 
@@ -80,6 +82,8 @@ public:
     void setAimTarget(sf::Vector2f targetPos);
 
     void setIsActive(bool active);
+
+    void setWalls(const std::vector<sf::FloatRect> &walls);
 
     // methods to pass features flags
     void setEnabledFeatures(const std::map<SimulationFeature, bool> &features);

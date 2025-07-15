@@ -178,7 +178,14 @@ void SmokeMaker::spawnNewParticles(float dt) {
 
 void SmokeMaker::updateParticles(float dt) {
     for (Particle &particle: m_particles) {
-        particle.update(dt);
+        if (m_wallsPtr) {
+            particle.update(dt, *m_wallsPtr); // Desreferencia o ponteiro para passar o vetor
+        }
+        else {
+            // Se não houver paredes (feature desligada), passa um vetor vazio
+            particle.update(dt, std::vector<sf::FloatRect>());
+        }
+        // particle.update(dt);
     }
 }
 
@@ -242,6 +249,18 @@ void SmokeMaker::update(float dt) {
     }
     updateParticles(dt);
     removeDeadParticles();
+
+    for (auto it = m_particles.begin(); it != m_particles.end();) {
+        // Passa o vetor de sf::FloatRect das paredes para a partícula
+        if (m_wallsPtr) {
+            it->update(dt, *m_wallsPtr); // Desreferencia o ponteiro para passar o vetor
+        }
+        else {
+            // Se não houver paredes (feature desligada), passa um vetor vazio
+            it->update(dt, std::vector<sf::FloatRect>());
+        }
+        ++it;
+    }
 }
 
 void SmokeMaker::draw(sf::RenderWindow &window) {
@@ -276,6 +295,11 @@ void SmokeMaker::setAimTarget(sf::Vector2f targetPos) {
 void SmokeMaker::setIsActive(bool active) {
     m_isActive = active;
 }
+
+void SmokeMaker::setWalls(const std::vector<sf::FloatRect> &walls) {
+    m_wallsPtr = &walls;
+}
+
 
 void SmokeMaker::setEnabledFeatures(const std::map<SimulationFeature, bool> &features) {
     m_enabledFeatures = features;

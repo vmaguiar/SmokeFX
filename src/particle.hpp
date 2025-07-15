@@ -47,7 +47,7 @@ public:
              sf::Vector2f startAcceleration = sf::Vector2f(0.0f, 0.0f), float initialMaxRotationSpeed = 0.0f,
              float rotDecayRate = 0.0f, float scaleRate = 0.0f);
 
-    void update(float dt);
+    void update(float dt, const std::vector<sf::FloatRect> &walls);
 
     void draw(sf::RenderWindow &window) const;
 

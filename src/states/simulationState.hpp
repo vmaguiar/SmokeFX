@@ -11,6 +11,9 @@ class SimulationState : public GameState {
 
     SmokeMaker m_smokeMaker;
 
+    std::vector<sf::RectangleShape> m_walls;
+    std::vector<sf::FloatRect> m_wallsBounds;
+
     std::map<SimulationFeature, bool> m_activeFeatures;
 
     sf::Font m_font;

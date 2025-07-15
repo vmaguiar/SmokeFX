@@ -48,13 +48,24 @@ Particle::Particle(sf::Vector2f startPosition, sf::Vector2f startVelocityDirecti
     }
 }
 
-void Particle::update(float dt) {
+void Particle::update(float dt, const std::vector<sf::FloatRect> &walls) {
     m_totalElapsedTime = m_totalElapsedTime + dt;
 
     // if particle is already dead don't update
     if (isDead()) {
         return;
     }
+
+    sf::FloatRect particleBounds;
+    if (m_smokeSpritePtr) {
+        // Obter os limites globais do sprite (se estiver usando textura)
+        particleBounds = m_smokeSpritePtr->getGlobalBounds();
+    }
+    else {
+        // Obter os limites globais da forma (se não estiver usando textura)
+        particleBounds = m_shape.getGlobalBounds();
+    }
+
 
     // 1. Apply acceleration for smooth stop and steam effect
     // Vel(t) = VelInitialMax * e^(-k*t)
@@ -132,6 +143,47 @@ void Particle::update(float dt) {
 
         // rotation
         m_smokeSpritePtr->setRotation(sf::degrees(m_currentRotation));
+    }
+
+    for (const auto &wall: walls) {
+        if (particleBounds.findIntersection(wall)) {
+            // collision detected
+            // 1 overlap calculation
+            float overlapX = std::min(particleBounds.position.x + particleBounds.size.x, wall.position.x + wall.size.x) -
+                             std::max(particleBounds.position.x, wall.position.x);
+            float overlapY = std::min(particleBounds.position.y + particleBounds.size.y, wall.position.y + wall.size.y) -
+                             std::max(particleBounds.position.y, wall.position.y);
+
+            // 2 intersection axis
+            if (overlapX < overlapY) {
+                // horizontal collision
+                m_currentVelocity.x = m_currentVelocity.x * -1.0f;
+                if (particleBounds.position.x < wall.position.x) {
+                    // left collision
+                    m_shape.setPosition({wall.position.x - particleBounds.size.x / 2.0f, m_shape.getPosition().y});
+                }
+                else {
+                    // right collision
+                    m_shape.setPosition({wall.position.x + wall.size.x + particleBounds.size.x / 2.0f, m_shape.getPosition().y});
+                }
+            }
+            else {
+                // vertical collision
+                m_currentVelocity.y = m_currentVelocity.y * -1.0f;
+                if (particleBounds.position.y < wall.position.y) {
+                    // upper collision
+                    m_shape.setPosition({m_shape.getPosition().x, wall.position.y - particleBounds.size.y / 2.0f});
+                }
+                else {
+                    // bottom collision
+                    m_shape.setPosition({m_shape.getPosition().x, wall.position.y + wall.size.y + particleBounds.size.y / 2.0f});
+                }
+            }
+
+            if (m_smokeSpritePtr) {
+                m_smokeSpritePtr->setPosition({m_shape.getPosition().x, m_shape.getPosition().y});
+            }
+        }
     }
 }
 
